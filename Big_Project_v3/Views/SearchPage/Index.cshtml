@@ -8,5 +8,34 @@
     @* <link rel="stylesheet" href="../..//Views/SearchPage/Index.cshtml.css" /> *@
     @* <link rel="stylesheet" href="~/css/Index.cshtml.css" /> *@
 </head>
-@await Html.PartialAsync("PartialView/_SearchBar")
+<div class="w-75 container-fluid mt-0">
+    <!-- 使內容在頁面中央對齊並自適應寬度
+         mt-4: Bootstrap 的上方外距，數字 4 表示 1.5rem（大約24px）的間距 -->
+    <!-- 搜尋列 -->
+    <div class="row mb-4">
+        <!-- mb-4: 設置底部外距 -->
+        <div class="col-12">
+            @await Html.PartialAsync("PartialView/_SearchBar")
+            <!-- 搜尋列放置於頁面頂部 -->
+        </div>
+    </div>
+
+    <!-- 主要內容區域 -->
+    <div class="row">
+        <!-- 左側篩選選項 -->
+        <div class="col-md-3">
+            <!-- col-md-3:表示在中等螢幕（md，768px 及以上）佔 3 格（12 格系統）寬度 -->
+            @await Html.PartialAsync("PartialView/_SearchFilter")
+            <!-- 左側篩選選項佈局 -->
+        </div>
+
+        <!-- 右側餐廳列表 -->
+        <div class="col-md-9">
+            <!-- col-md-9:表示在中等螢幕及以上佔 9 格（12 格系統）寬度 -->
+            @await Html.PartialAsync("PartialView/_SearchRestaurant")
+            <!-- 右側餐廳列表佈局 -->
+        </div>
+    </div>
+</div>
+
 </html>
