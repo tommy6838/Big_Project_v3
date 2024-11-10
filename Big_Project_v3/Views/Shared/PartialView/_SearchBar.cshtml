@@ -1,0 +1,80 @@
+﻿@page
+@model Big_Project_v3.Views.Shared.PartialView._SearchBarModel
+@{
+}
+<body>
+    <!-- 主內容容器 -->
+    <div class="container mt-5">
+        <!-- 搜尋區域的外框 -->
+        <div class="row justify-content-center">
+            <!-- 使用 Bootstrap 的 row 和 justify-content-center 將內容置於容器中間 -->
+            <div class="d-flex flex-column bg-dark text-white p-4 rounded">
+                <!-- col-md-8: 中等螢幕（md）和更大螢幕寬度下佔據8個欄位
+                     bg-dark: 背景為深色
+                     text-white: 文字顏色為白色
+                     p-4: 四周內距為 4（相當於 1.5rem）
+                     rounded: 圓角邊框 -->
+                <!-- text-center: 將標題文字置中
+                     mb-4: 下方外距為 4（相當於 1.5rem） -->
+                <!-- 搜尋表單區 -->
+                <form class="d-flex  align-items-center gap-3">
+                    <!-- d-flex: 使用 Flexbox 佈局
+                         flex-column: 將內容垂直排列
+                         align-items-center: 水平置中對齊
+                         gap-3: 每個項目之間的間距為 3（相當於 1rem） -->
+                    <!-- 日期選擇 -->
+                    <div class="input-group">
+                        <!-- input-group: Bootstrap 組件，用於將多個輸入項目組合在一起 -->
+                        <span class="input-group-text bg-secondary text-white">
+                            <!-- input-group-text: 添加圖標
+                                 bg-secondary: 背景為次要顏色
+                                 text-white: 文字顏色為白色 -->
+                            <i class="fa fa-calendar-alt"></i>
+                        </span>
+                        <input type="date" class="form-control">
+                        <!-- form-control: 設定輸入框的樣式，使其符合 Bootstrap 的預設樣式 -->
+                    </div>
+
+                    <!-- 時間選擇 -->
+                    <div class="input-group">
+                        <span class="input-group-text bg-secondary text-white">
+                            <i class="fa fa-clock"></i>
+                        </span>
+                        <select class="form-select">
+                            <!-- form-select: 設定下拉選單的樣式，使其符合 Bootstrap 的預設樣式 -->
+                            <option>下午8:00</option>
+                            <!-- 其他選項 -->
+                        </select>
+                    </div>
+
+                    <!-- 人數選擇 -->
+                    <div class="input-group">
+                        <span class="input-group-text bg-secondary text-white">
+                            <i class="fa fa-user"></i>
+                        </span>
+                        <select class="form-select">
+                            <option>2位</option>
+                            <!-- 其他選項 -->
+                        </select>
+                    </div>
+
+                    <!-- 關鍵字輸入框 -->
+                    <div class="input-group">
+                        <span class="input-group-text bg-secondary text-white">
+                            <i class="fa fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control" placeholder="地點、餐廳或料理">
+                    </div>
+
+                    <!-- 搜尋按鈕 -->
+                    <button type="submit" class="btn btn-danger w-50">
+                        <!-- btn: 基本按鈕樣式
+                             btn-danger: 設定按鈕顏色為紅色
+                             w-50: 設定按鈕寬度為 50% -->
+                        尋找餐廳
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>

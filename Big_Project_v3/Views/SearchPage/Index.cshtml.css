@@ -1,0 +1,69 @@
+﻿/* 整個搜尋區域的外框設定 */
+.search-bar {
+    display: flex; /* 使用 Flexbox 排列各個篩選選項 */
+    align-items: center; /* 垂直置中對齊 */
+    justify-content: space-between; /* 子項目之間平均分佈 */
+    background-color: #2d2d2d; /* 背景色設定 */
+    padding: 15px; /* 內距設定 */
+    border-radius: 8px; /* 圓角設定 */
+}
+
+/* 各個篩選選項的外框樣式 */
+.filter-item {
+    display: flex; /* 讓圖標和輸入框並排 */
+    align-items: center; /* 垂直置中對齊 */
+    margin-right: 15px; /* 每個篩選選項的間距 */
+}
+
+/* 圖標樣式 */
+.icon {
+    color: #fff; /* 圖標顏色設定為白色 */
+    margin-right: 8px; /* 圖標和輸入框之間的間距 */
+}
+
+/* 日期輸入框樣式 */
+.date-input {
+    max-width: 150px; /* 最大寬度限制 */
+    padding: 5px; /* 內距設定 */
+    border: none; /* 移除邊框 */
+    border-radius: 5px; /* 圓角設定 */
+}
+
+/* 時間選擇框樣式 */
+.time-select {
+    max-width: 100px; /* 最大寬度限制 */
+    padding: 5px; /* 內距設定 */
+    border: none; /* 移除邊框 */
+    border-radius: 5px; /* 圓角設定 */
+}
+
+/* 人數選擇框樣式 */
+.people-select {
+    max-width: 80px; /* 最大寬度限制 */
+    padding: 5px; /* 內距設定 */
+    border: none; /* 移除邊框 */
+    border-radius: 5px; /* 圓角設定 */
+}
+
+/* 搜尋文字輸入框樣式 */
+.search-input-container {
+    flex-grow: 1; /* 讓這個項目填滿剩餘空間 */
+}
+
+.search-input {
+    width: 100%; /* 滿版寬度 */
+    padding: 5px; /* 內距設定 */
+    border: none; /* 移除邊框 */
+    border-radius: 5px; /* 圓角設定 */
+}
+
+/* 搜尋按鈕樣式 */
+.search-button {
+    padding: 8px 15px; /* 上下和左右內距設定 */
+    background-color: #ff5252; /* 按鈕背景色設定為紅色 */
+    color: #fff; /* 按鈕文字顏色設定為白色 */
+    font-weight: bold; /* 文字加粗 */
+    border: none; /* 移除邊框 */
+    border-radius: 5px; /* 圓角設定 */
+    cursor: pointer; /* 滑鼠指標設定為手型 */
+}
