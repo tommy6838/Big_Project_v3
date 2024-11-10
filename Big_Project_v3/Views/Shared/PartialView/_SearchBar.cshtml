@@ -4,7 +4,7 @@
 }
 <body>
     <!-- 主內容容器 -->
-    <div class="container mt-5">
+    <div class="w-100 container-fluid mt-5">
         <!-- 搜尋區域的外框 -->
         <div class="row justify-content-center">
             <!-- 使用 Bootstrap 的 row 和 justify-content-center 將內容置於容器中間 -->
@@ -74,6 +74,26 @@
                         尋找餐廳
                     </button>
                 </form>
+            </div>
+            <!-- 排序按鈕區 -->
+            <div class="container">
+                <div class="row align-items-center m-3">
+                    <!-- 左側按鈕區域 -->
+                    <div class="col-auto">
+                        <button class="btn btn-outline-primary me-2">評分高低</button>
+                        <button class="btn btn-outline-primary">距離遠近</button>
+                    </div>
+
+                    <!-- 中間的地點提示文字 -->
+                    <div class="col-9 text-center">
+                        <!--col 影響它的位置-->
+                        <p class="mb-0">您現在的地點在台中市嗎？ 
+                            <a href="#" class="text-danger">
+                            <i class="bi bi-geo-alt-fill"></i> 獲得現在地點
+                            </a>    
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
