@@ -1,0 +1,19 @@
+﻿@model double
+
+<p>
+    @for (var i = 1; i <= 5; i++)
+    {
+        if (i <= (int)Model) // 滿顆星
+        {
+            <i class="bi bi-star-fill text-warning"></i>
+        }
+        else if (i - 0.5 <= Model) // 半顆星
+        {
+            <i class="bi bi-star-half text-warning"></i>
+        }
+        else // 空心星
+        {
+            <i class="bi bi-star text-warning"></i>
+        }
+    }
+</p>

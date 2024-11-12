@@ -63,16 +63,43 @@
                         <span class="input-group-text bg-secondary text-white">
                             <i class="fa fa-search"></i>
                         </span>
-                        <input type="text" class="form-control" placeholder="地點、餐廳或料理">
+                        <input id="searchKeyword" type="text" class="form-control" placeholder="地點、餐廳或料理">
                     </div>
 
                     <!-- 搜尋按鈕 -->
+                    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+                    <!-- 引入 Axios 庫，確保可以使用 axios -->
+
+                    <button id="searchButton" type="button" onclick="searchRestaurants()" class="btn btn-danger w-50">尋找餐廳</button>
+
                     <button type="submit" class="btn btn-danger w-50">
                         <!-- btn: 基本按鈕樣式
                              btn-danger: 設定按鈕顏色為紅色
                              w-50: 設定按鈕寬度為 50% -->
                         尋找餐廳
                     </button>
+
+                   @* 搜尋按鈕的方法與邏輯 *@
+                    <script>
+                        function searchRestaurants() {
+                            var keyword = document.getElementById("searchKeyword").value; // 取得使用者輸入的關鍵字
+
+                            // 使用 Axios 發送 POST 請求到後端的 SearchRestaurants 方法
+                            axios.post('/SearchPage/SearchRestaurants', {
+                                keyword: keyword // 傳送的資料，包含關鍵字
+                            })
+                                .then(function (response) {
+                                    // 當請求成功時執行此函數
+                                    document.getElementById('searchResultsContainer').innerHTML = response.data;
+                                    // 將後端返回的 HTML 資料填充到指定的容器中，更新搜尋結果
+                                    console.log(searchResultsContainer); // 輸出 container，以確認是哪個元素
+                                })
+                                .catch(function (error) {
+                                    // 當請求失敗時執行此函數
+                                    console.error('There was an error!', error); // 在控制台輸出錯誤資訊，方便除錯
+                                });
+                        }
+                    </script>
                 </form>
             </div>
             <!-- 排序按鈕區 -->

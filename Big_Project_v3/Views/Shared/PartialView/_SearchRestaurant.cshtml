@@ -1,89 +1,65 @@
-﻿@page
-@model Big_Project_v3.Views.Shared.PartialView._SearchRestaurantModel
-@{
-}
-@* Views/Shared/PartialView/_RestaurantList.cshtml *@
-<div class="bg-white p-3 rounded">
+﻿@model Big_Project_v3.ViewModels.SearchRestaurantViewModel
+<style>
+    /* 星星容器樣式 */
+    .star-rating {
+        font-size: 1.5rem;
+        color: #d3d3d3; /* 灰色作為空星顏色 */
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    /* 覆蓋的滿星樣式 */
+    .star-rating-fill {
+        color: #FFD700; /* 金黃色作為滿星顏色 */
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0; /* 初始寬度設為 0，通過 style 動態設定 */
+        overflow: hidden;
+    }
+
+        /* 星星圖案 */
+        .star-rating::before,
+        .star-rating-fill::before {
+            content: "★★★★★"; /* 使用五顆星作為基底 */
+        }
+</style>
+
+<div id="" class="bg-white p-3 rounded">
     <!-- bg-white: 設定背景顏色為白色
          p-3: 設定四周的內距為 3
          rounded: 設置圓角邊框 -->
-
-    @* <h5 class="text-dark">餐廳列表</h5> *@
+    @* 顯示餐廳列表 *@
+    <h5 class="text-dark">餐廳列表</h5>
     <!-- text-dark: 設定文字顏色為深色 -->
-    <!-- 餐廳項目範例 -->
-    <div class="restaurant-item d-flex mb-3">
-        <!-- d-flex: 使用 Flexbox 讓內容水平排列
-             mb-3: 設定底部外距為 3（相當於 1rem） -->
-        <img src="restaurant-image.jpg" alt="Restaurant Image" class="img-thumbnail me-3" style="width: 120px; height: 80px;">
-        <!-- img-thumbnail: 添加圖片縮略圖邊框樣式
-             me-3: 設定右側外距為 3（相當於 1rem）
-             style: 手動設定圖片寬度和高度 -->
+    @foreach (var restaurant in Model.Restaurants)
+    {
+        <div class="restaurant-item d-flex mb-3">
+            <!-- d-flex: 使用 Flexbox 讓內容水平排列
+                 mb-3: 設定底部外距為 3（相當於 1rem） -->
+            <img src="~/img/輕井澤-封面.jpg" alt="Restaurant Image" class="img-thumbnail me-3" style="width: 120px; height: 80px;">
+            <!-- img-thumbnail: 添加圖片縮略圖邊框樣式
+                 me-3: 設定右側外距為 3（相當於 1rem）
+                 style: 手動設定圖片寬度和高度 -->
 
-        <div>
-            <h6 class="text-primary">輕井澤鍋物 公益店</h6>
-            <!-- text-primary: 設定文字顏色為主要顏色 -->
-            <p>⭐⭐⭐⭐⭐ - 不同凡響 (9)</p>
-            <p>$$$ - 涮涮鍋 - 西區</p>
-            <button class="btn btn-danger">下午7:00</button>
-            <!-- btn: 基本按鈕樣式
-                 btn-danger: 設定按鈕顏色為紅色 -->
+            <div>
+                <h6 class="text-primary">@restaurant.Name</h6>
+                <!-- text-primary: 設定文字顏色為主要顏色 -->
+                @await Html.PartialAsync("PartialView/_SearchRestaurant/StarRating_BootStrap", restaurant.AverageRating)
+                @restaurant.Description
+                <br />
+                @await Html.PartialAsync("PartialView/_SearchRestaurant/StarRating_CSS", restaurant.AverageRating)
+                <br />
+                @restaurant.Description
+                
+                <p>$$$ - @restaurant.Address</p>
+                <button class="btn btn-danger">下午7:00</button>
+                <!-- btn: 基本按鈕樣式
+                     btn-danger: 設定按鈕顏色為紅色 -->
+            </div>
         </div>
-    </div>
-    <hr />
-</div>
-
-<div class="bg-white p-3 rounded">
-    <!-- bg-white: 設定背景顏色為白色
-         p-3: 設定四周的內距為 3
-         rounded: 設置圓角邊框 -->
-    @* <h5 class="text-dark">餐廳列表</h5> *@
-    <!-- text-dark: 設定文字顏色為深色 -->
-    <!-- 餐廳項目範例 -->
-    <div class="restaurant-item d-flex mb-3">
-        <!-- d-flex: 使用 Flexbox 讓內容水平排列
-             mb-3: 設定底部外距為 3（相當於 1rem） -->
-        <img src="restaurant-image.jpg" alt="Restaurant Image" class="img-thumbnail me-3" style="width: 120px; height: 80px;">
-        <!-- img-thumbnail: 添加圖片縮略圖邊框樣式
-             me-3: 設定右側外距為 3（相當於 1rem）
-             style: 手動設定圖片寬度和高度 -->
-
-        <div>
-            <h6 class="text-primary">輕井澤鍋物 公益店</h6>
-            <!-- text-primary: 設定文字顏色為主要顏色 -->
-            <p>⭐⭐⭐⭐⭐ - 不同凡響 (9)</p>
-            <p>$$$ - 涮涮鍋 - 西區</p>
-            <button class="btn btn-danger">下午7:00</button>
-            <!-- btn: 基本按鈕樣式
-                 btn-danger: 設定按鈕顏色為紅色 -->
-        </div>
-    </div>
-    <hr />
-</div>
-
-<div class="bg-white p-3 rounded">
-    <!-- bg-white: 設定背景顏色為白色
-         p-3: 設定四周的內距為 3
-         rounded: 設置圓角邊框 -->
-    @* <h5 class="text-dark">餐廳列表</h5> *@
-    <!-- text-dark: 設定文字顏色為深色 -->
-    <!-- 餐廳項目範例 -->
-    <div class="restaurant-item d-flex mb-3">
-        <!-- d-flex: 使用 Flexbox 讓內容水平排列
-             mb-3: 設定底部外距為 3（相當於 1rem） -->
-        <img src="restaurant-image.jpg" alt="Restaurant Image" class="img-thumbnail me-3" style="width: 120px; height: 80px;">
-        <!-- img-thumbnail: 添加圖片縮略圖邊框樣式
-             me-3: 設定右側外距為 3（相當於 1rem）
-             style: 手動設定圖片寬度和高度 -->
-
-        <div>
-            <h6 class="text-primary">輕井澤鍋物 公益店</h6>
-            <!-- text-primary: 設定文字顏色為主要顏色 -->
-            <p>⭐⭐⭐⭐⭐ - 不同凡響 (9)</p>
-            <p>$$$ - 涮涮鍋 - 西區</p>
-            <button class="btn btn-danger">下午7:00</button>
-            <!-- btn: 基本按鈕樣式
-                 btn-danger: 設定按鈕顏色為紅色 -->
-        </div>
-    </div>
-    <hr />
+        <hr />
+    }
 </div>

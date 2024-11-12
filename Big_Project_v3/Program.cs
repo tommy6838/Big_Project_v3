@@ -1,6 +1,5 @@
 using Big_Project_v3.Models;
 using Microsoft.EntityFrameworkCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // 添加服務到 DI 容器
