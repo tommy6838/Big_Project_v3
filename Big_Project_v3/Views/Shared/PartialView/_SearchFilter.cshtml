@@ -1,0 +1,93 @@
+﻿@* Views/Shared/PartialView/_FilterOptions.cshtml *@
+<div class="w-75 bg-light p-3 rounded">
+    <!-- bg-light: 設定背景顏色為淺色（light）
+         p-3: 設定四周的內距為 3（相當於 1rem）
+         rounded: 設置圓角，使區塊邊緣有圓角效果 -->
+
+    <h5 class="text-dark">篩選選項</h5>
+    <!-- text-dark: 設定文字顏色為深色 -->
+    <!-- 用餐選項 -->
+    <div class="mb-4">
+        <!-- mb-4: 設定底部外距為 4（相當於 1.5rem） -->
+        <h6>用餐選項</h6>
+        <div class="form-check">
+            <!-- form-check: 設置為表單選項項目容器 -->
+            <input class="form-check-input" type="radio" name="diningOption" id="dineIn" checked>
+            <!-- form-check-input: 用於設置單選或複選框樣式
+                 type="radio": 設定為單選框
+                 name="diningOption": 表單選項名稱，同一名稱表示互斥選項
+                 id="dineIn": 該項目的唯一標識符
+                 checked: 預設選中該項 -->
+
+            <label class="form-check-label" for="dineIn">
+                <!-- form-check-label: 標籤樣式，與 input 元素保持對齊 -->
+                包含內用
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="diningOption" id="delivery">
+            <label class="form-check-label" for="delivery">僅提供外送</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="diningOption" id="takeOut">
+            <label class="form-check-label" for="takeOut">僅提供外帶</label>
+        </div>
+    </div>
+
+    <!-- 座位選擇 -->
+    <div class="mb-4">
+        <h6>座位選擇</h6>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="standardSeat">
+            <!-- type="checkbox": 設定為複選框 -->
+            <label class="form-check-label" for="standardSeat">一般座位</label>
+        </div>
+    </div>
+
+    <!-- 價位選擇 -->
+    <div class="mb-4">
+        <h6>價位</h6>
+        <div class="btn-group" role="group" aria-label="Price Range">
+            <!-- btn-group: 建立按鈕組，使按鈕呈現一組連續排列的狀態
+                 role="group": 提供語意給輔助技術
+                 aria-label: 無障礙設置，為該組提供描述 -->
+            <button type="button" class="btn btn-outline-secondary">$</button>
+            <!-- btn: 基本按鈕樣式
+                 btn-outline-secondary: 淺色邊框按鈕 -->
+            <button type="button" class="btn btn-outline-secondary">$$</button>
+            <button type="button" class="btn btn-outline-secondary">$$$</button>
+            <button type="button" class="btn btn-outline-secondary">$$$$</button>
+        </div>
+    </div>
+
+    <!-- 地區選擇 -->
+    <div class="mb-4">
+        <h6>地區</h6>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="nantou">
+            <label class="form-check-label" for="nantou">南投縣</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="chiayiCity">
+            <label class="form-check-label" for="chiayiCity">嘉義市</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="chiayiCounty">
+            <label class="form-check-label" for="chiayiCounty">嘉義縣</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="miaoli">
+            <label class="form-check-label" for="miaoli">苗栗縣</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="hsinchu">
+            <label class="form-check-label" for="hsinchu">新竹市</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="hsinchuCounty">
+            <label class="form-check-label" for="hsinchuCounty">新竹縣</label>
+        </div>
+        <a href="#" class="text-primary">+顯示更多內容</a>
+        <!-- text-primary: 設定連結顏色為 Bootstrap 的主要顏色 -->
+    </div>
+</div>
