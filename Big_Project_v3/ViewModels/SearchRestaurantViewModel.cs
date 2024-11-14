@@ -8,6 +8,7 @@ namespace Big_Project_v3.ViewModels
     {
 
         public IEnumerable<Restaurant> Restaurants { get; set; } = new List<Restaurant>();
+        //public IEnumerable<Restaurant> Restaurants { get; set; }
         // 儲存多個餐廳的搜尋結果
         public string ?SearchKeyword { get; set; } // 儲存使用者的搜尋關鍵字
     }

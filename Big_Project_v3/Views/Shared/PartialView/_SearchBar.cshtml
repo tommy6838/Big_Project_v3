@@ -17,7 +17,7 @@
                 <!-- text-center: 將標題文字置中
                      mb-4: 下方外距為 4（相當於 1.5rem） -->
                 <!-- 搜尋表單區 -->
-                <form class="d-flex  align-items-center gap-3">
+                <form id="searchForm" onsubmit="searchRestaurants(event)" method="post" action="/SearchPage/SearchRestaurants" class="d-flex  align-items-center gap-3">
                     <!-- d-flex: 使用 Flexbox 佈局
                          flex-column: 將內容垂直排列
                          align-items-center: 水平置中對齊
@@ -63,7 +63,7 @@
                         <span class="input-group-text bg-secondary text-white">
                             <i class="fa fa-search"></i>
                         </span>
-                        <input id="searchKeyword" type="text" class="form-control" placeholder="地點、餐廳或料理">
+                        <input id="searchKeyword" name="keyword" type="text" class="form-control" placeholder="地點、餐廳或料理">
                     </div>
 
                     <!-- 搜尋按鈕 -->
@@ -76,13 +76,14 @@
                         <!-- btn: 基本按鈕樣式
                              btn-danger: 設定按鈕顏色為紅色
                              w-50: 設定按鈕寬度為 50% -->
-                        尋找餐廳
+                        尋找餐廳2
                     </button>
-
+                </form>
                    @* 搜尋按鈕的方法與邏輯 *@
                     <script>
                         function searchRestaurants() {
                             var keyword = document.getElementById("searchKeyword").value; // 取得使用者輸入的關鍵字
+                            console.log("Search Keyword:", keyword); // 輸出關鍵字，確認其正確性
 
                             // 使用 Axios 發送 POST 請求到後端的 SearchRestaurants 方法
                             axios.post('/SearchPage/SearchRestaurants', {
@@ -92,7 +93,8 @@
                                     // 當請求成功時執行此函數
                                     document.getElementById('searchResultsContainer').innerHTML = response.data;
                                     // 將後端返回的 HTML 資料填充到指定的容器中，更新搜尋結果
-                                    console.log(searchResultsContainer); // 輸出 container，以確認是哪個元素
+                                    //console.log(searchResultsContainer); // 輸出 container，以確認是哪個元素
+
                                 })
                                 .catch(function (error) {
                                     // 當請求失敗時執行此函數
@@ -100,7 +102,6 @@
                                 });
                         }
                     </script>
-                </form>
             </div>
             <!-- 排序按鈕區 -->
             <div class="container">

@@ -34,6 +34,19 @@
     @* 顯示餐廳列表 *@
     <h5 class="text-dark">餐廳列表</h5>
     <!-- text-dark: 設定文字顏色為深色 -->
+    <!-- 確認篩選結果 -->
+    <p>篩選後的餐廳數量: @Model.Restaurants.Count()</p>
+
+@*     @foreach (var restaurant in Model.Restaurants)
+    {
+        <!-- 顯示餐廳資訊 -->
+        <div class="restaurant-item d-flex mb-3">
+            <h6 class="text-primary">@restaurant.Name</h6>
+            <p>@restaurant.Address</p>
+            <!-- 其他顯示內容 -->
+        </div>
+    } *@
+
     @foreach (var restaurant in Model.Restaurants)
     {
         <div class="restaurant-item d-flex mb-3">
@@ -47,10 +60,10 @@
             <div>
                 <h6 class="text-primary">@restaurant.Name</h6>
                 <!-- text-primary: 設定文字顏色為主要顏色 -->
-                @await Html.PartialAsync("PartialView/_SearchRestaurant/StarRating_BootStrap", restaurant.AverageRating)
+                @await Html.PartialAsync("PartialView/_SearchRestaurantFolder/StarRating_BootStrap", restaurant.AverageRating)
                 @restaurant.Description
                 <br />
-                @await Html.PartialAsync("PartialView/_SearchRestaurant/StarRating_CSS", restaurant.AverageRating)
+                @await Html.PartialAsync("PartialView/_SearchRestaurantFolder/StarRating_CSS", restaurant.AverageRating)
                 <br />
                 @restaurant.Description
                 

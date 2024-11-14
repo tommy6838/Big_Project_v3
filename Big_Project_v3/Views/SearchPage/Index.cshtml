@@ -35,8 +35,8 @@
 			<!-- 右側餐廳列表 -->
 			<div id="searchResultsContainer" class="col-md-9">
 				<!-- col-md-9:表示在中等螢幕及以上佔 9 格（12 格系統）寬度 -->
+				@* @await Html.PartialAsync("PartialView/_SearchRestaurant") *@
 				@await Html.PartialAsync("PartialView/_SearchRestaurant", new SearchRestaurantViewModel())
-
 				<!-- 右側餐廳列表佈局 -->
 			</div>
 		</div>
