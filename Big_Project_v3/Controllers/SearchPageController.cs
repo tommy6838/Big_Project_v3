@@ -19,6 +19,7 @@ namespace Big_Project_v3.Controllers
         {
             return View(); // 返回對應的視圖，預設會尋找 Views/SearchPage/Index.cshtml
         }
+
         [HttpPost] // 指定此方法只接受 POST 請求
         //[Route("SearchPage/SearchRestaurants")]
         public IActionResult SearchRestaurants(string keyword) // 定義搜尋餐廳的方法，接受關鍵字參數
@@ -27,7 +28,7 @@ namespace Big_Project_v3.Controllers
             Console.WriteLine("搜尋關鍵字: " + keyword);
 
             // 初始化查詢變數，將其設為 IQueryable，以便延遲查詢到資料庫層級
-            IQueryable<Restaurant> query = _context.Restaurants;
+            //IQueryable<Restaurant> query = _context.Restaurants;
 
             // 若關鍵字為空白，直接查詢所有餐廳
             var results = string.IsNullOrWhiteSpace(keyword)
@@ -35,11 +36,11 @@ namespace Big_Project_v3.Controllers
                 : _context.Restaurants
                     .Where(r => r.Name.Contains(keyword))
                     .ToList();
-
+             
 
             //----------測試回傳數據----------
             Console.WriteLine("搜尋結果數量: " + results.Count);
-            foreach (var restaurant in results)
+            foreach (   var restaurant in results)
             {
                 Console.WriteLine("符合條件的餐廳名稱: " + restaurant.Name);
             }

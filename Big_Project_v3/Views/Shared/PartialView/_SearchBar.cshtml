@@ -81,26 +81,20 @@
                 </form>
                    @* 搜尋按鈕的方法與邏輯 *@
                     <script>
-                        function searchRestaurants() {
-                            var keyword = document.getElementById("searchKeyword").value; // 取得使用者輸入的關鍵字
-                            console.log("Search Keyword:", keyword); // 輸出關鍵字，確認其正確性
+                    function searchRestaurants() {
+                        var keyword = document.getElementById("searchKeyword").value;
 
-                            // 使用 Axios 發送 POST 請求到後端的 SearchRestaurants 方法
-                            axios.post('/SearchPage/SearchRestaurants', {
-                                keyword: keyword // 傳送的資料，包含關鍵字
+                        console.log("Search Keyword:", keyword); // 確認關鍵字是否正確
+
+                        // 將參數附加到 URL 作為查询字符串
+                        axios.post(`/SearchPage/SearchRestaurants?keyword=${encodeURIComponent(keyword)}`)
+                            .then(function (response) {
+                                document.getElementById('searchResultsContainer').innerHTML = response.data;
                             })
-                                .then(function (response) {
-                                    // 當請求成功時執行此函數
-                                    document.getElementById('searchResultsContainer').innerHTML = response.data;
-                                    // 將後端返回的 HTML 資料填充到指定的容器中，更新搜尋結果
-                                    //console.log(searchResultsContainer); // 輸出 container，以確認是哪個元素
-
-                                })
-                                .catch(function (error) {
-                                    // 當請求失敗時執行此函數
-                                    console.error('There was an error!', error); // 在控制台輸出錯誤資訊，方便除錯
-                                });
-                        }
+                            .catch(function (error) {
+                                console.error("請求發生錯誤:", error);
+                            });
+                    }
                     </script>
             </div>
             <!-- 排序按鈕區 -->
