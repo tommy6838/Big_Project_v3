@@ -20,13 +20,13 @@
     cursor: pointer;
 }
 
-.review-card .card-body {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    padding: 20px;
-}
+    .review-card .card-body {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 20px;
+    }
 
 .review-top-section {
     flex-grow: 1;
@@ -57,31 +57,33 @@
 
 .customer-name {
     font-weight: bold;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
 }
 
 .review-score i {
-    font-size: 1rem;
+    font-size: 1.25rem;
     margin-right: 2px;
+    white-space: nowrap;
 }
 
 .review-content {
-    font-size: 1rem;
+    font-size: 1.25rem;
     margin-top: 10px;
 }
 
 .review-date {
-    font-size: 0.9rem;
+    font-size: 1.25rem;
 }
 
 .restaurant-name {
     font-weight: bold;
     color: #333;
     margin-top: 1rem;
+    font-size: 1.5rem;
 }
 
 .restaurant-details {
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     color: #666;
 }
 
@@ -90,5 +92,7 @@
 }
 
 .restaurant-address {
-    font-size: 0.9rem;
+    font-size: 1.05rem;
+    white-space: nowrap;
+    overflow: hidden;
 }

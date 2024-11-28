@@ -1,4 +1,4 @@
-﻿@using Big_Project_v3.Models
+﻿
 @using Microsoft.AspNetCore.Html
 @model HomePageViewModel
 @using System.Text.Json
@@ -199,7 +199,7 @@
 			<div class="card-body d-flex flex-column">
 				<!-- Top Content -->
 				<div class="review-top-section">
-					<h5 class="customer-name">@review.CustomerName.Substring(0, 1)＊@review.CustomerName.Substring(review.CustomerName.Length-1 , 1)</h5>
+					<h5 class="customer-name">@review.CustomerName.Substring(0, 1)＊@review.CustomerName.Substring(review.CustomerName.Length - 1, 1)</h5>
 					<!-- Rating and Date -->
 					<div class="review-score-date d-flex align-items-center mb-2">
 						<div class="review-score">
@@ -228,7 +228,7 @@
 							</div>
 							<p class="restaurant-address text-muted">@review.RestaurantAddress</p>
 						</div>
-						<div class="col-sm-4 p-0 d-flex" style="margin-top:5px; border:solid 1px #aaa;">
+						<div class="col-sm-4 p-0 d-flex" style="margin-top:5px; ">
 							<img src="@review.ImageUrl" style="width:100%;height:100px;object-fit:cover;" />
 						</div>
 					</div>
@@ -261,7 +261,7 @@
 					<span id="modalRestaurantRating"></span>
 				</div>
 				<p class="restaurant-address" id="modalRestaurantAddress"></p>
-				<img src="" id="modalImage" style="width:60%;height:auto;object-fit:cover;max-height:350px" />
+				<img src="" id="modalImage" style="width:60%;height:auto;object-fit:cover;max-height:250px" />
 
 				<!-- Add Hyperlink to Bottom Section -->
 				<a href=`/Restaurant/Index/${review.RestaurantID}` id="modalRestaurantLink" style="text-decoration: none; color: inherit; display: block; margin-top: 10px;">
@@ -279,7 +279,7 @@
 
 
 
- <script>
+<script>
 	function showReviewModal(review) {
 		// Log the review data for debugging
 		console.log("Review Data:", review);
@@ -356,11 +356,12 @@
 		width: 90% !important;
 		margin-left: auto !important;
 		margin-right: auto !important;
+		margin-bottom: -50px !important;
 	}
 
 	#carouselExampleControlsNoTouching, #carouselExampleControlsNearby, #carouselExampleControlsActive {
 		width: 100% !important;
-		height: 350px !important;
+		height: 380px !important;
 	}
 
 	.carousel-inner {
@@ -403,8 +404,8 @@
 		width: 100% !important;
 		border-radius: 15px 15px 0 0 !important;
 		object-fit: fill !important;
-		min-height: 120px !important;
-		max-height: 120px !important;
+		min-height: 150px !important;
+		max-height: 150px !important;
 	}
 
 	.time-button:hover {
@@ -449,7 +450,7 @@
 
 
 
- <script>
+<script>
 	// 使用絕對路徑的餐廳數據
 
 	const restaurantList = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(restaurantListWithAbsolutePaths));
@@ -552,27 +553,27 @@
 		pageItems.forEach((restaurant, index) => {
 			const uniqueIndex = `${context}_${index}`;
 			pageHtml += `
-				<div class="col" style="flex: 0 0 ${100 / itemsPerPage}%; max-width: ${100 / itemsPerPage}%; height: 100%;">
-					<div class="card h-100" style="cursor: pointer;" onclick="submitFormIfNoButton(event, 'hiddenForm_${uniqueIndex}')">
-						<img src="${restaurant.ImageUrl}" class="card-img-top" alt="${restaurant.RestaurantName}">
-						<div class="card-body">
-							<h5 class="card-title text-nowrap fw-bold overflow-hidden text-truncate">${restaurant.RestaurantName}</h5>
-							${getStarHtml(restaurant.RestaurantRating)}
-							<p style="margin-bottom:0 !important">${getPrice(restaurant.PriceRange)}．${getAdd(restaurant.RestaurantAddress)}</p>
-							<p class="text-nowrap overflow-hidden fw-bold text-truncate">${restaurant.Description}</p>
-							<div class="time-buttons mt-2 d-flex justify-content-between" style="width: 100%;">
-								<form id="timeForm_${uniqueIndex}" method="GET" action="/Booking/BookingPage/${restaurant.RestaurantID}" style="display: none;">
-									<input type="hidden" name="time" id="selectedTime_${uniqueIndex}">
-									<input type="hidden" name="restaurantName" id="selectedRestaurant_${uniqueIndex}" value="${restaurant.RestaurantName}">
-								</form>
-								${generateTimeButtons(context, restaurant.RestaurantName, index)}
+					<div class="col" style="flex: 0 0 ${100 / itemsPerPage}%; max-width: ${100 / itemsPerPage}%; height: 100%;">
+						<div class="card h-100" style="cursor: pointer;" onclick="submitFormIfNoButton(event, 'hiddenForm_${uniqueIndex}')">
+							<img src="${restaurant.ImageUrl}" class="card-img-top" alt="${restaurant.RestaurantName}">
+							<div class="card-body">
+							<h3 class="card-title text-nowrap fw-bold   overflow-hidden text-truncate ">${restaurant.RestaurantName}</h3>
+								${getStarHtml(restaurant.RestaurantRating)}
+								<p style="margin-bottom:0 !important">${getPrice(restaurant.PriceRange)}．${getAdd(restaurant.RestaurantAddress)}</p>
+								<p class="text-nowrap overflow-hidden fw-bold text-truncate">${restaurant.Description}</p>
+								<div class="time-buttons mt-2 d-flex justify-content-between" style="width: 100%;">
+									<form id="timeForm_${uniqueIndex}" method="GET" action="/Booking/BookingPage/${restaurant.RestaurantID}" style="display: none;">
+										<input type="hidden" name="time" id="selectedTime_${uniqueIndex}">
+										<input type="hidden" name="restaurantName" id="selectedRestaurant_${uniqueIndex}" value="${restaurant.RestaurantName}">
+									</form>
+									${generateTimeButtons(context, restaurant.RestaurantName, index)}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<form id="hiddenForm_${uniqueIndex}" method="POST" action="/Restaurant/Index/${restaurant.RestaurantID}" style="display:none;">
-					<input type="hidden" name="restaurantName" value="${restaurant.RestaurantID}">
-				</form>`;
+					<form id="hiddenForm_${uniqueIndex}" method="POST" action="/Restaurant/Index/${restaurant.RestaurantID}" style="display:none;">
+						<input type="hidden" name="restaurantName" value="${restaurant.RestaurantID}">
+					</form>`;
 		});
 
 		pageHtml += `</div></div>`;
@@ -676,19 +677,19 @@
 			const buttonStyle = 'background-color: #D25823; color: white; border: none; width: 32%; font-size: clamp(10px, 1vw, 12px); white-space: nowrap; height: 35px; border-radius: 5px; font-weight: bold;';
 
 			return `
-			<button type="button" class="time-button" style="${buttonStyle}"
-				onclick="setTimeAndSubmit('${context}', '${Time24Hour(leftTime)}', '${restaurantName}', ${index})">
-				${formatTime(leftTime)}
-			</button>
-			<button type="button" class="time-button" style="${buttonStyle}"
-				onclick="setTimeAndSubmit('${context}', '${Time24Hour(middleTime)}', '${restaurantName}', ${index})">
-				${formatTime(middleTime)}
-			</button>
-			<button type="button" class="time-button" style="${buttonStyle}"
-				onclick="setTimeAndSubmit('${context}', '${Time24Hour(rightTime)}', '${restaurantName}', ${index})">
-				${formatTime(rightTime)}
-			</button>
-		`;
+				<button type="button" class="time-button" style="${buttonStyle}"
+					onclick="setTimeAndSubmit('${context}', '${Time24Hour(leftTime)}', '${restaurantName}', ${index})">
+					${formatTime(leftTime)}
+				</button>
+				<button type="button" class="time-button" style="${buttonStyle}"
+					onclick="setTimeAndSubmit('${context}', '${Time24Hour(middleTime)}', '${restaurantName}', ${index})">
+					${formatTime(middleTime)}
+				</button>
+				<button type="button" class="time-button" style="${buttonStyle}"
+					onclick="setTimeAndSubmit('${context}', '${Time24Hour(rightTime)}', '${restaurantName}', ${index})">
+					${formatTime(rightTime)}
+				</button>
+			`;
 		}
 
 
@@ -777,7 +778,7 @@
 
 
 	@* // 初始化和調整窗口大小重新渲染 *@
-	window.addEventListener("load", updateItemsPerPage);
+		window.addEventListener("load", updateItemsPerPage);
 	window.addEventListener("resize", updateItemsPerPage);
 
 	window.addEventListener("load", updateItemsPerPageNearby);
