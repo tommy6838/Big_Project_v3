@@ -1,0 +1,107 @@
+﻿@model Big_Project_v3.Models.RestaurantUser
+
+@{
+	ViewData["Title"] = "SignUp";
+	Layout = null;
+}
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - Big_Project_v3</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/Big_Project_v3.styles.css" asp-append-version="true" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+	<div>
+		<div class="d-flex justify-content-center mt-5 mb-3">
+			<a href="/Backstage/Home">
+				<img src="~/img/new_logo.png" alt="Logo" style="width:250px;">
+			</a>
+		</div>
+		<div class="d-flex justify-content-center mb-2">
+			<h2>餐廳管理人員註冊</h2>
+		</div>
+
+		<div class="row d-flex justify-content-center">
+			<div class="col-md-4">
+				<form asp-action="SignUp">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+					<div class="form-group mb-3">
+						<label asp-for="ManagerId" class="control-label">帳號:</label>
+						<input asp-for="ManagerId" class="form-control" placeholder="帳號(至少六個字元)" required minlength="6" />
+						<span asp-validation-for="ManagerId" class="text-danger"></span>
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="Email" class="control-label">電子郵件:</label>
+						<input asp-for="Email" class="form-control" type="email" placeholder="電子郵件地址" pattern="[a-z0-9._%+\-]+@@[a-z0-9.\-]+\.[a-z]{2,}$" required="required" />
+						<span asp-validation-for="Email" class="text-danger"></span>
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="MobileNumber" class="control-label">手機號碼:</label>
+						<input asp-for="MobileNumber" class="form-control" placeholder="手機號碼(格式:09xxxxxxxx，共10碼)" pattern="^09\d{8}$" required title="請輸入正確的手機號碼格式:09xxxxxxxx，共10碼" />
+						<span asp-validation-for="MobileNumber" class="text-danger"></span>
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="PasswordHash" class="control-label">密碼:</label>
+						<div class="d-flex justify-content-end">
+							<input asp-for="PasswordHash" type="password" class="form-control" id="inputPassword" placeholder="設定密碼(格式:含英數至少六個字元)" pattern="^(?=.*[a-zA-Z])(?=.*[0-9]).{6,}$" required="required" oninput="setCustomValidity('');" oninvalid="setCustomValidity('請輸入正確的密碼格式:含英數至少六個字元');" />
+							<button class="btn btn-outline-secondary" type="button" id="toggle_inputPassword">
+								<i class="bi bi-eye-fill"></i>
+							</button>
+						</div>
+						<span asp-validation-for="PasswordHash" class="text-danger"></span>
+					</div>
+					<div class="form-group mb-3">
+						<label asp-for="PasswordHash" class="control-label">確認密碼:</label>
+						<div class="d-flex justify-content-end">
+							<input asp-for="PasswordHash" type="password" class="form-control" id="ConfirmPassword" placeholder="確認密碼" required="required" oninput="setCustomValidity('');" onchange="if(document.getElementById('inputPassword').value != document.getElementById('ConfirmPassword').value){setCustomValidity('密碼不吻合');}" />
+							<button class="btn btn-outline-secondary" type="button" id="toggle_ConfirmPassword">
+								<i class="bi bi-eye-fill"></i>
+							</button>
+						</div>
+						<span asp-validation-for="PasswordHash" class="text-danger"></span>
+					</div>
+
+					<div class="form-group">
+						<input type="submit" value="建立帳號" class="btn btn-primary" />
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="d-flex justify-content-center mb-3">
+			<a style="color:gray;">已經有帳號?</a>
+			<a asp-action="LogIn">Log In</a>
+		</div>
+	</div>
+
+	@* 顯示&隱藏密碼 *@
+	<script>
+		document.getElementById('toggle_inputPassword').addEventListener('click', function () {
+			const passwordField = document.getElementById('inputPassword');
+			const type = passwordField.type === 'password' ? 'text' : 'password';
+			passwordField.type = type;
+
+			// 切換按鈕文字和圖標
+			this.innerHTML = type === 'password' ? '<i class="bi bi-eye-fill"></i>' : '<i class="bi bi-eye-slash-fill"></i>';
+		});
+
+		document.getElementById('toggle_ConfirmPassword').addEventListener('click', function () {
+			const passwordField = document.getElementById('ConfirmPassword');
+			const type = passwordField.type === 'password' ? 'text' : 'password';
+			passwordField.type = type;
+
+			// 切換按鈕文字和圖標
+			this.innerHTML = type === 'password' ? '<i class="bi bi-eye-fill"></i>' : '<i class="bi bi-eye-slash-fill"></i>';
+		});
+	</script>
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+</body>

@@ -1,0 +1,47 @@
+﻿@model Big_Project_v3.Models.RestaurantUser
+
+@{
+    ViewData["Title"] = "DeleteUM";
+}
+
+<h1>用戶管理</h1>
+<hr />
+
+<div class="d-flex align-items-center">
+    <h4 class="mb-0 me-2">刪除管理人員</h4>
+    <a asp-action="UserManagement" class="btn btn-primary">返回</a>
+</div>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2 mt-3 mb-3">
+            @Html.DisplayNameFor(model => model.ManagerId)
+        </dt>
+        <dd class="col-sm-10 mt-3 mb-3">
+            @Html.DisplayFor(model => model.ManagerId)
+        </dd>
+        <dt class="col-sm-2 mb-3">
+            @Html.DisplayNameFor(model => model.ManagerPosition)
+        </dt>
+        <dd class="col-sm-10 mb-3">
+            @Html.DisplayFor(model => model.ManagerPosition)
+        </dd>
+        <dt class="col-sm-2 mb-3">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10 mb-3">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class="col-sm-2 mb-3">
+            @Html.DisplayNameFor(model => model.MobileNumber)
+        </dt>
+        <dd class="col-sm-10 mb-3">
+            @Html.DisplayFor(model => model.MobileNumber)
+        </dd>
+    </dl>
+
+    <form asp-action="DeleteUM">
+        <input type="hidden" asp-for="RestaurantUserId" value="@Model.RestaurantUserId" />
+        <input type="submit" value="刪除" class="btn btn-danger" />
+    </form>
+</div>

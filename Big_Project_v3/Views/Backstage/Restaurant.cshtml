@@ -1,0 +1,330 @@
+﻿@{
+	ViewData["Title"] = "Restaurant";
+}
+
+<h1>餐廳管理</h1>
+
+<nav class="navbar">
+	<div class="btn-group" role="group" id="buttonGroup">
+		<button type="button" class="btn btn-outline-primary">餐廳資訊</button>
+		<button type="button" class="btn btn-outline-primary" onclick="window.location.href='/Backstage/RestaurantPhoto'">介紹圖片管理</button>
+		<button type="button" class="btn btn-outline-primary">公告管理</button>
+
+	</div>
+
+
+	<div class="d-flex align-items-center me-2  ms-auto">
+		<button id="btnSet" class="btn btn-outline-primary" data-bs-target="#">開始更變</button>
+	</div>
+
+	<div class="d-flex align-items-center me-2  ms-auto">
+		<button id="noChange" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#NNN">取消更變</button>
+	</div>
+
+	<div class="d-flex align-items-center me-6 float-end">
+		<button id="yesChange" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#YYY">確認更變</button>
+	</div>
+
+</nav>
+@* ----------------------表單---------------------- *@
+
+<div class="container-fluid my-4" id="mainContainer">
+	<div class="card" style="width: 100%; height: 70vh; background-color:transparent">
+		<div class="card-body" style="height: 100%;">
+			<!-- 這裡是大格子的內容區域 -->
+			<div id="contentArea" class="w-100 h-100" style="overflow: auto;">
+				<!-- 這裡由 JavaScript 動態插入 PartialView 的內容 -->
+			</div>
+		</div>
+	</div>
+</div>
+
+@* <div class="container my-4" id="mainContainer">
+	<div class="card" style="width: 100%; height: 70vh; background-color:transparent">
+		<!-- 使用 70vh 讓高度也變得動態 -->
+		<div class="card-body d-flex align-items-center justify-content-center" style="height: 100%;">
+			<!-- 這裡是大格子的內容區域 -->
+			<div id="contentArea" class="w-100 h-100 border border-secondary d-flex align-items-center justify-content-center" style="border: 1px dashed #aaa; overflow: auto;">
+				<!-- <p>這裡是用來承載資料的方形格子。</p> -->
+
+			</div>
+		</div>
+	</div>
+</div> *@
+
+
+@* ---------------------------------modal------------------------------------ *@
+
+<!-- 取消框 -->
+<div class="modal fade" id="NNN">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">要放棄修改嗎?</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">放棄取消</button>
+				<button type="button" class="btn btn-primary" onclick="" data-bs-dismiss="modal">堅持取消</button>
+				@* <button type="button" class="btn btn-primary" onclick="window.location.href='/Backstage/Restaurant' ; ">堅持取消</button> *@
+				@* 取消暫時先跳回來 *@
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- 確認框 -->
+<div class="modal fade" id="YYY">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">確定要更變了嗎?</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">返回修改</button>
+				<button type="button" class="btn btn-primary" onclick="" data-bs-dismiss="modal">確認更變</button>
+				@* <button type="button" class="btn btn-primary" onclick="window.location.href='/Backstage/Restaurant'">確認更變</button> *@
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<!-- 資料鎖提示框 -->
+<div class="modal fade" id="already">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">已在修改模式!</h4>
+
+			</div>
+
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bs-dismiss="modal">返回</button>
+				@* 直接跳回來 *@
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@* ---------------------------------modal------------------------------------ *@
+
+<!-- 取消框 -->
+<div class="modal fade" id="NNN">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">要放棄修改嗎?</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">放棄取消</button>
+				<button type="button" class="btn btn-primary" onclick="" data-bs-dismiss="modal">堅持取消</button>
+				@* <button type="button" class="btn btn-primary" onclick="window.location.href='/Backstage/Restaurant' ; ">堅持取消</button> *@
+				@* 取消暫時先跳回來 *@
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- 確認框 -->
+<div class="modal fade" id="YYY">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">確定要更變了嗎?</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">返回修改</button>
+				<button type="button" class="btn btn-primary" onclick="" data-bs-dismiss="modal">確認更變</button>
+				@* <button type="button" class="btn btn-primary" onclick="window.location.href='/Backstage/Restaurant'">確認更變</button> *@
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<!-- 資料鎖提示框 -->
+<div class="modal fade" id="already">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">已在修改模式!</h4>
+
+			</div>
+
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bs-dismiss="modal">返回</button>
+				@* 直接跳回來 *@
+			</div>
+		</div>
+	</div>
+</div>
+
+@* ------------------------script ---------------------------*@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+	$(document).ready(function () {
+		// 綁定按鈕的點擊事件
+		$('#buttonGroup .btn').click(function () {
+			var action = $(this).text();
+			var url = '';
+			var viewIdentifier = '';
+
+			//介紹圖片管理要改成跳轉頁面並加載!
+
+			if (action === '餐廳資訊') {
+				url = '/Backstage/PartialRestaurantInfo';
+				viewIdentifier = 'RestaurantInfo';
+			} else if (action === '公告管理') {
+				url = '/Backstage/PartialAnnouncement';
+				viewIdentifier = 'Announcement';
+			}
+
+			// 發送 AJAX 請求來加載對應的 Partial View
+			if (url) {
+				$.ajax({
+					url: url,
+					type: 'GET',
+					success: function (response) {
+						$('#contentArea').html(response);
+						$('#contentArea').attr('data-view', viewIdentifier); // 設置 data-view 標識當前視圖
+					},
+					error: function () {
+						alert('無法加載資料，請稍後再試');
+					}
+				});
+			}
+		});
+
+		// 當按下"開始更變"按鈕時，讓輸入框變為可編輯
+		$('#btnSet').click(function () {
+			if (!$(this).hasClass('active')) {
+				$(this).removeClass('btn-outline-primary')
+					.addClass('btn-success active')
+					.text('設定更改中');
+
+				// 根據當前的視圖來進行相應的變更
+				var currentView = $('#contentArea').attr('data-view');
+				if (currentView === 'RestaurantInfo' || currentView === 'Announcement') {
+					$('#contentArea').find('input, textarea, select').removeAttr('readonly').removeAttr('disabled');
+				}
+			} else {
+				$('#already').modal('show');
+			}
+		});
+
+		// 取消修改後按取消，將輸入框變為不可編輯
+		$('#NNN .modal-footer .btn-primary').click(function () {
+			if ($('#btnSet').hasClass('active')) {
+				$('#btnSet').removeClass('btn-success active')
+					.addClass('btn-outline-primary')
+					.text('開始更變');
+
+				// 根據當前的視圖來恢復為不可編輯
+				var currentView = $('#contentArea').attr('data-view');
+				if (currentView === 'RestaurantInfo' || currentView === 'Announcement') {
+					$('#contentArea').find('input, textarea, select').attr('readonly', 'readonly').attr('disabled', 'disabled');
+				}
+			}
+		});
+
+		// 確認修改後按確認，將輸入框變為不可編輯並提交數據
+		$('#YYY .modal-footer .btn-primary').click(function () {
+			if ($('#btnSet').hasClass('active')) {
+				$('#btnSet').removeClass('btn-success active')
+					.addClass('btn-outline-primary')
+					.text('開始更變');
+
+				var currentView = $('#contentArea').attr('data-view');
+
+				if (currentView === 'RestaurantInfo') {
+					var formData = {
+						restaurantId: parseInt($("#RestaurantId").val()),  // 確保是數字
+						name: $("#Name").val(),
+						address: $("#Address").val(),
+						contactPhone: $("#ContactPhone").val(),
+						description: $("#Description").val(),
+						priceRange: $("#PriceRange").val(),
+						hasParking: $("#HasParking").val() === "true" // 明確轉換為布林值
+					};
+
+					console.log("準備提交的餐廳資料：", formData);
+
+					$.ajax({
+						url: "/Backstage/UpdateRestaurantInfo",
+						type: "POST",
+						contentType: "application/json",
+						data: JSON.stringify(formData),
+						success: function (response) {
+							console.log("餐廳資料更新成功");
+						},
+						error: function (err) {
+							console.error("餐廳資料更新失敗", err);
+						}
+					});
+				} else if (currentView === 'Announcement') {
+					var announcementData = {
+						announcementId: parseInt($("#AnnouncementId").val()),  // 確保是數字
+						title: $("#Title").val(),
+						content: $("#Content").val(),
+						announcementDate: $("#AnnouncementDate").val(),
+						startDate: $("#StartDate").val(),
+						endDate: $("#EndDate").val()
+					};
+
+					console.log("準備提交的公告資料：", announcementData);
+
+					$.ajax({
+						url: "/Backstage/UpdateAnnouncement",
+						type: "POST",
+						contentType: "application/json",
+						data: JSON.stringify(announcementData),
+						success: function (response) {
+							console.log("公告更新成功");
+						},
+						error: function (err) {
+							console.error("公告更新失敗", err);
+						}
+					});
+				}
+
+				// 恢復表單為不可編輯
+				$('#contentArea').find('input, textarea, select').attr('readonly', 'readonly').attr('disabled', 'disabled');
+			}
+		});
+	});
+
+</script>

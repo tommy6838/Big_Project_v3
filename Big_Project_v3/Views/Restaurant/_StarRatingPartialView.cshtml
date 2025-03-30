@@ -1,0 +1,28 @@
+﻿@model Double
+
+<div class="star-rating">
+    <div class="star-rating-fill" style="width:@(Model / 5 * 100)%"></div>
+</div>
+
+<style>
+    .star-rating {
+        font-size: 1.5rem;
+        color: #d3d3d3; /* 灰色為空星顏色 */
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .star-rating-fill {
+        color: #FFD700; /* 金黃色為滿星顏色 */
+        position: absolute;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+    }
+
+        .star-rating::before, .star-rating-fill::before {
+            content: "★★★★★"; /* 五顆星圖案 */
+        }
+</style>

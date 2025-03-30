@@ -1,12 +1,31 @@
 ﻿/* 整個搜尋區域的外框設定 */
+/* 原本搜尋區域的樣式保持不變 */
 .search-bar {
-    display: flex; /* 使用 Flexbox 排列各個篩選選項 */
-    align-items: center; /* 垂直置中對齊 */
-    justify-content: space-between; /* 子項目之間平均分佈 */
-    background-color: #2d2d2d; /* 背景色設定 */
-    padding: 15px; /* 內距設定 */
-    border-radius: 8px; /* 圓角設定 */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #2d2d2d;
+    padding: 15px;
+    border-radius: 8px;
+    flex-wrap: wrap; /* 允許子項目在螢幕變窄時換行 */
 }
+
+/* 響應式設計，螢幕寬度小於 768px 時 */
+@media (max-width: 768px) {
+    .search-bar {
+        flex-direction: column; /* 子項目改為垂直排列 */
+        gap: 10px; /* 增加項目之間的垂直間距 */
+    }
+
+    .filter-item {
+        width: 100%; /* 子項目占滿整行 */
+    }
+
+    .search-button {
+        width: 100%; /* 搜尋按鈕占滿整行 */
+    }
+}
+
 
 /* 各個篩選選項的外框樣式 */
 .filter-item {

@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Big_Project_v3.ViewModels.FavoriteViewModel>
+
+<div class="container mt-4">
+    <h2 class="fw-bold text-center">珍藏餐廳</h2>
+    <div class="row">
+        @foreach (var restaurant in Model)
+        {
+            <div class="col-md-12 mb-3">
+                <!-- 卡片樣式 -->
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <!-- 餐廳圖片及按鈕 -->
+                        <div class="row">
+                            <div class="col-md-3 d-flex flex-column align-items-center">
+                                <a asp-controller="Restaurant" asp-action="Index" asp-route-id="@restaurant.RestaurantId">
+                                    <img src="@restaurant.PhotoUrl" alt="餐廳圖片" class="img-fluid rounded mb-3" style="width: 200px; height: 200px;">
+                                </a>
+                                <button type="button" class="fw-bold btn btn-danger remove-favorite-btn mb-3" style="width: 200px; height: 40px;" data-restaurant-id="@restaurant.RestaurantId">取消珍藏</button>
+                            </div>
+                            <div class="col-md-9 d-flex flex-column justify-content-center align-items-md-start align-items-center text-center text-md-start">
+                                <!-- 餐廳資訊 -->
+                                <a asp-controller="Restaurant" asp-action="Index" asp-route-id="@restaurant.RestaurantId" class="text-decoration-none">
+                                    <h4 class="fw-bolder card-title text-black-50">@restaurant.Name</h4>
+                                </a>
+                                <p>@restaurant.Description</p>
+                                <p>收藏時間：@restaurant.AddedAt</p>
+                                <!-- 臨時添加，用於檢查 RestaurantId -->
+                                @* <p class="text-muted">Restaurant ID: @restaurant.RestaurantId</p> *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -28,12 +28,12 @@ public partial class PasswordResetRequest
     /// <summary>
     /// 令牌的過期時間（前台 + 後台）。此欄位指定密碼重設令牌的有效期限，超過此時間令牌將失效。
     /// </summary>
-    public DateTime ExpiresAt { get; set; }
+    public DateTime? ExpiresAt { get; set; }
 
     /// <summary>
     /// 請求建立時間（前台 + 後台）。此欄位記錄密碼重設請求的建立時間，用於審計和管理。
     /// </summary>
-    public DateTime CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     public virtual RestaurantUser? RestaurantUser { get; set; }
 

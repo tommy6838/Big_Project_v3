@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Big_Project_v3.ViewModels.ReviewViewModel>
+
+<div class="container mt-4">
+    <h2 class="fw-bold text-center">你的評論</h2>
+    <div class="row">
+        @foreach (var review in Model)
+        {
+            <div class="col-md-12 mb-3">
+                <!-- 卡片樣式 -->
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <!-- 餐廳圖片 -->
+                        <div class="row">
+                            <div class="col-md-3 d-flex flex-column align-items-center">
+                                <a asp-controller="Restaurant" asp-action="Index" asp-route-id="@review.RestaurantID">
+                                    <img src="@review.PhotoURL" alt="@review.RestaurantName" class="img-fluid rounded mb-3" style="width: 200px; height: 200px;">
+                                </a>
+
+                                <!-- 修改評論按鈕 -->
+                                @if (review.IsReviewLocked != "不可改")
+                                {
+                                    <button class="fw-bold img-fluid rounded btn btn-primary edit-comment-btn mb-3" style="width: 200px; height: 40px" data-review-id="@review.ReviewID">修改評論</button>
+                                }
+                            </div>
+
+                            <div class="col-md-9 d-flex flex-column justify-content-center align-items-md-start align-items-center text-center text-md-start">
+                                <!-- 餐廳評論資訊 -->
+                                <a asp-controller="Restaurant" asp-action="Index" asp-route-id="@review.RestaurantID" class="text-decoration-none">
+                                    <h4 class="fw-bolder card-title text-black-50">@review.RestaurantName</h4>
+                                </a>
+                                <p class="card-text"><small class="text-muted">@review.ReviewDate.ToString("yyyy/MM/dd")</small></p>
+                                <strong class="card-text">你的評論：@review.ReviewText</strong>
+                                <p></p>
+                                <!-- 星級 Bootstrap 樣式 -->
+@*                                 <strong>你的評價：</strong>
+                                @await Html.PartialAsync("PartialView/_SearchRestaurantFolder/StarRating_BootStrap", review.Rating) *@
+                                <!-- 星級 CSS 樣式 -->
+                                <div style="display: flex; align-items: center;">
+                                    <strong style="vertical-align: middle;">你的評價：</strong>
+                                    @await Html.PartialAsync("PartialView/_SearchRestaurantFolder/StarRating_CSS", review.Rating)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

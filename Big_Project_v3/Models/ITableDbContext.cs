@@ -6,10 +6,6 @@ namespace Big_Project_v3.Models;
 
 public partial class ITableDbContext : DbContext
 {
-    public ITableDbContext()
-    {
-    }
-
     public ITableDbContext(DbContextOptions<ITableDbContext> options)
         : base(options)
     {
@@ -37,10 +33,6 @@ public partial class ITableDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=iTableDB;Trusted_Connection=True;TrustServerCertificate=True");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Announcement>(entity =>
@@ -53,19 +45,17 @@ public partial class ITableDbContext : DbContext
             entity.Property(e => e.AnnouncementDate)
                 .HasPrecision(0)
                 .HasComment("公告日期（前台 + 後台）。此欄位記錄公告的發布日期，用於排序和過濾。");
-            entity.Property(e => e.Content).HasComment("公告內容（前台 + 後台）。此欄位存儲公告的詳細內容，供前台用戶閱讀和後台管理。");
+            entity.Property(e => e.Content)
+                .HasMaxLength(1000)
+                .HasComment("公告內容（前台 + 後台）。此欄位存儲公告的詳細內容，供前台用戶閱讀和後台管理。");
             entity.Property(e => e.CreatedAt)
                 .HasPrecision(0)
                 .HasComment("公告建立時間（前台 + 後台）。此欄位記錄公告紀錄的建立時間，用於審計和管理。");
-            entity.Property(e => e.EndDate)
-                .HasComment("公告結束日期（前台 + 後台）。此欄位指定公告的結束日期，決定公告何時停止顯示。")
-                .HasColumnType("datetime");
+            entity.Property(e => e.EndDate).HasComment("公告結束日期（前台 + 後台）。此欄位指定公告的結束日期，決定公告何時停止顯示。");
             entity.Property(e => e.RestaurantId)
                 .HasComment("餐廳ID，外鍵（FK）連結到 Restaurants 表（前台 + 後台）。此欄位指定該公告所屬的餐廳。")
                 .HasColumnName("RestaurantID");
-            entity.Property(e => e.StartDate)
-                .HasComment("公告開始日期（前台 + 後台）。此欄位指定公告的開始日期，決定公告何時開始顯示。")
-                .HasColumnType("datetime");
+            entity.Property(e => e.StartDate).HasComment("公告開始日期（前台 + 後台）。此欄位指定公告的開始日期，決定公告何時開始顯示。");
             entity.Property(e => e.Title)
                 .HasMaxLength(100)
                 .HasComment("公告標題（前台 + 後台）。此欄位存儲公告的標題，用於前台顯示和後台管理。");
@@ -144,13 +134,14 @@ public partial class ITableDbContext : DbContext
                 .HasComment("相片的唯一識別碼，主鍵（PK），自動遞增。此欄位用於唯一標識每個相片紀錄，並在資料表之間建立關聯。")
                 .HasColumnName("PhotoID");
             entity.Property(e => e.Description)
-                .HasMaxLength(200)
+                .HasMaxLength(500)
                 .HasComment("相片描述（前台 + 後台）。此欄位提供對相片的詳細描述，幫助前台用戶理解相片內容。");
+            entity.Property(e => e.ImagePath).HasMaxLength(500);
             entity.Property(e => e.PhotoType)
                 .HasMaxLength(50)
                 .HasComment("相片類型（例如：餐廳環境、菜單）（前台 + 後台）。此欄位描述相片的類型，方便分類和管理。");
             entity.Property(e => e.PhotoUrl)
-                .HasMaxLength(200)
+                .HasMaxLength(500)
                 .HasComment("相片的 URL 或存儲路徑（前台 + 後台）。此欄位存儲相片的網路地址或在伺服器上的存儲路徑，用於前台顯示和管理。")
                 .HasColumnName("PhotoURL");
             entity.Property(e => e.RestaurantId)
@@ -188,13 +179,17 @@ public partial class ITableDbContext : DbContext
             entity.Property(e => e.NumChildren).HasComment("小孩人數（前台 + 後台）。此欄位指定訂位時預定的小孩人數，用於餐廳準備座位和資源。");
             entity.Property(e => e.ReservationDate).HasComment("訂位日期（前台 + 後台）。此欄位指定訂位的日期，用於安排和管理。");
             entity.Property(e => e.ReservationStatus)
-                .HasMaxLength(20)
+                .HasMaxLength(50)
                 .HasComment("訂位狀態（例如：已確認、已取消）（前台 + 後台）。此欄位指示訂位的當前狀態，方便管理和追蹤。");
-            entity.Property(e => e.ReservationTime).HasComment("訂位時間（前台 + 後台）。此欄位指定訂位的具體時間，用於安排和管理。");
+            entity.Property(e => e.ReservationTime)
+                .HasPrecision(0)
+                .HasComment("訂位時間（前台 + 後台）。此欄位指定訂位的具體時間，用於安排和管理。");
             entity.Property(e => e.RestaurantId)
                 .HasComment("餐廳ID，外鍵（FK）連結到 Restaurants 表（前台 + 後台）。此欄位指定訂位所屬的餐廳。")
                 .HasColumnName("RestaurantID");
-            entity.Property(e => e.SpecialRequests).HasComment("特殊要求備註（前台 + 後台）。此欄位存儲使用者對訂位的特殊要求或備註，如過敏資訊、座位偏好等。");
+            entity.Property(e => e.SpecialRequests)
+                .HasMaxLength(1000)
+                .HasComment("特殊要求備註（前台 + 後台）。此欄位存儲使用者對訂位的特殊要求或備註，如過敏資訊、座位偏好等。");
             entity.Property(e => e.UpdatedAt)
                 .HasPrecision(0)
                 .HasComment("訂位更新時間（前台 + 後台）。此欄位記錄訂位紀錄的最後更新時間，用於追蹤資料變更歷史。");
@@ -219,9 +214,7 @@ public partial class ITableDbContext : DbContext
                 .HasComment("設定的唯一識別碼，主鍵（PK），自動遞增。此欄位用於唯一標識每個訂位控管設定，並在資料表之間建立關聯。")
                 .HasColumnName("SettingID");
             entity.Property(e => e.AdvanceBookingDays).HasComment("開放預訂的天數（後台）。此欄位指定餐廳允許提前預訂的天數範圍，用於限制預訂的時間跨度。");
-            entity.Property(e => e.AvailableTimeSlots)
-                .HasMaxLength(500)
-                .HasComment("可預訂的時段區間（JSON 格式）（後台）。此欄位存儲餐廳可接受預訂的具體時段，以 JSON 格式表示，方便靈活管理。");
+            entity.Property(e => e.AvailableTimeSlots).HasComment("可預訂的時段區間（JSON 格式）（後台）。此欄位存儲餐廳可接受預訂的具體時段，以 JSON 格式表示，方便靈活管理。");
             entity.Property(e => e.CloseBookingBeforeHours).HasComment("關閉預訂的提前小時數（後台）。此欄位指定餐廳在預訂前需提前關閉訂位的時間，用於確保餐廳有足夠的準備時間。");
             entity.Property(e => e.CreatedAt)
                 .HasPrecision(0)
@@ -264,7 +257,10 @@ public partial class ITableDbContext : DbContext
             entity.Property(e => e.CreatedAt)
                 .HasPrecision(0)
                 .HasComment("餐廳資料建立時間（前台 + 後台）。此欄位記錄餐廳資料的建立時間，用於審計和管理。");
-            entity.Property(e => e.Description).HasComment("餐廳簡介（前台 + 後台）。此欄位存儲餐廳的詳細介紹，包括特色、歷史等資訊，供客戶參考。");
+            entity.Property(e => e.Description)
+                .HasMaxLength(1000)
+                .HasComment("餐廳簡介（前台 + 後台）。此欄位存儲餐廳的詳細介紹，包括特色、歷史等資訊，供客戶參考。");
+            entity.Property(e => e.GoogleMapAddress).HasMaxLength(500);
             entity.Property(e => e.HasParking).HasComment("是否有停車場（1：有，0：無）（前台 + 後台）。此欄位指示餐廳是否提供停車設施，供客戶參考。");
             entity.Property(e => e.IsReservationOpen).HasComment("是否開放預訂（1：開放，0：關閉）（前台 + 後台）。此欄位指示餐廳是否接受預訂，供客戶決定是否進行預約。");
             entity.Property(e => e.LastCheckInTime)
@@ -273,6 +269,7 @@ public partial class ITableDbContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
                 .HasComment("餐廳名稱（前台 + 後台）。此欄位存儲餐廳的名稱，用於顯示和管理。");
+            entity.Property(e => e.PriceRange).HasMaxLength(50);
             entity.Property(e => e.UpdatedAt)
                 .HasPrecision(0)
                 .HasComment("餐廳資料更新時間（前台 + 後台）。此欄位記錄餐廳資料的最後更新時間，用於追蹤資料變更歷史。");
@@ -286,6 +283,7 @@ public partial class ITableDbContext : DbContext
 
             entity.Property(e => e.AvailabilityId).HasColumnName("AvailabilityID");
             entity.Property(e => e.RestaurantId).HasColumnName("RestaurantID");
+            entity.Property(e => e.TimeSlot).HasPrecision(0);
             entity.Property(e => e.UpdatedAt)
                 .HasPrecision(0)
                 .HasComment("資料更新時間（前台 + 後台）。此欄位記錄可用時段紀錄的最後更新時間，用於追蹤資料變更歷史。");
@@ -310,11 +308,11 @@ public partial class ITableDbContext : DbContext
                 .HasMaxLength(100)
                 .HasComment("登入電子郵件（前台 + 後台）。此欄位存儲餐廳管理者的電子郵件地址，用於登入和通信。");
             entity.Property(e => e.ManagerId)
-                .HasMaxLength(100)
+                .HasMaxLength(50)
                 .HasComment("登入及顯示名稱（前台 + 後台）。此欄位用於餐廳管理者的登入名稱及在系統中的顯示名稱，方便識別和管理。")
                 .HasColumnName("ManagerID");
             entity.Property(e => e.ManagerPosition)
-                .HasMaxLength(20)
+                .HasMaxLength(50)
                 .HasComment("管理人員的職位（前台 + 後台）。此欄位描述餐廳管理者的職位，如店長、經理等，用於角色識別和權限管理。");
             entity.Property(e => e.MobileNumber)
                 .HasMaxLength(20)
@@ -348,10 +346,10 @@ public partial class ITableDbContext : DbContext
             entity.Property(e => e.RestaurantId)
                 .HasComment("餐廳ID，外鍵（FK）連結到 Restaurants 表（前台 + 後台）。此欄位指定評論所屬的餐廳。")
                 .HasColumnName("RestaurantID");
-            entity.Property(e => e.ReviewDate)
-                .HasPrecision(0)
-                .HasComment("評論日期（前台 + 後台）。此欄位記錄評論的發表日期，用於排序和顯示。");
-            entity.Property(e => e.ReviewText).HasComment("評論內容（前台 + 後台）。此欄位存儲使用者對餐廳的詳細評論，用於提供其他用戶參考。");
+            entity.Property(e => e.ReviewDate).HasComment("評論日期（前台 + 後台）。此欄位記錄評論的發表日期，用於排序和顯示。");
+            entity.Property(e => e.ReviewText)
+                .HasMaxLength(1000)
+                .HasComment("評論內容（前台 + 後台）。此欄位存儲使用者對餐廳的詳細評論，用於提供其他用戶參考。");
             entity.Property(e => e.UpdatedAt)
                 .HasPrecision(0)
                 .HasComment("評論更新時間（前台 + 後台）。此欄位記錄評論紀錄的最後更新時間，用於追蹤資料變更歷史。");

@@ -1,0 +1,69 @@
+﻿@model LoginViewModel
+
+<form asp-action="Login" method="post">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <fieldset>
+                    <br />
+                    <legend class="text-center mb-4">登入</legend>
+
+                    <!-- 帳號 -->
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="UserName" name="UserName" placeholder="帳號" required />
+                        <label for="UserName">帳號</label>
+                    </div>
+
+                    <!-- 密碼 -->
+                    <div class="form-floating mb-3 position-relative">
+                        <input type="password" class="form-control" id="PasswordHash" name="PasswordHash" placeholder="密碼" required />
+                        <label for="PasswordHash">密碼</label>
+                        <!-- 顯示/隱藏密碼的眼睛圖示 -->
+                        <i id="eyeIcon" class="bi bi-eye position-absolute top-50 end-0 translate-middle-y me-3" style="cursor: pointer;"></i>
+                    </div>
+
+                    <!-- 顯示錯誤訊息 -->
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-lg" style="background-color: #D25823; color: white; border: none;"
+                                onmouseover="this.style.backgroundColor='#C53F0F'"
+                                onmouseout="this.style.backgroundColor='#D25823'">
+                            登入
+                        </button>
+                    </div>
+
+
+                    <!-- 註冊連結 -->
+                    <div class="text-center mt-3">
+                        <p>
+                            尚未註冊iTable會員?
+                            <a asp-controller="User" asp-action="Create" class="text-primary text-decoration-underline">
+                                立即註冊
+                            </a>
+                        </p>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- JavaScript for password toggle -->
+<script>
+    document.getElementById('eyeIcon').addEventListener('click', function () {
+        var passwordField = document.getElementById('PasswordHash');
+        var icon = document.getElementById('eyeIcon');
+
+        // Toggle the type of the password field between 'password' and 'text'
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        } else {
+            passwordField.type = 'password';
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        }
+    });
+</script>

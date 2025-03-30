@@ -1,79 +1,573 @@
-﻿@page
-@model Big_Project_v3.Views.Shared.PartialView._SearchBarModel
+﻿@model Big_Project_v3.Views.Shared.PartialView._SearchBarModel
 @{
 }
+<link href="~/css/_SearchBar.css" rel="stylesheet">
 <body>
     <!-- 主內容容器 -->
-    <div class="container mt-5">
+    <div class="container-fluid mt-4 p-0">
         <!-- 搜尋區域的外框 -->
         <div class="row justify-content-center">
             <!-- 使用 Bootstrap 的 row 和 justify-content-center 將內容置於容器中間 -->
             <div class="d-flex flex-column bg-dark text-white p-4 rounded">
-                <!-- col-md-8: 中等螢幕（md）和更大螢幕寬度下佔據8個欄位
-                     bg-dark: 背景為深色
-                     text-white: 文字顏色為白色
-                     p-4: 四周內距為 4（相當於 1.5rem）
-                     rounded: 圓角邊框 -->
-                <!-- text-center: 將標題文字置中
-                     mb-4: 下方外距為 4（相當於 1.5rem） -->
                 <!-- 搜尋表單區 -->
-                <form class="d-flex  align-items-center gap-3">
-                    <!-- d-flex: 使用 Flexbox 佈局
-                         flex-column: 將內容垂直排列
-                         align-items-center: 水平置中對齊
-                         gap-3: 每個項目之間的間距為 3（相當於 1rem） -->
+                <form class="search-bar">
                     <!-- 日期選擇 -->
                     <div class="input-group">
-                        <!-- input-group: Bootstrap 組件，用於將多個輸入項目組合在一起 -->
                         <span class="input-group-text bg-secondary text-white">
-                            <!-- input-group-text: 添加圖標
-                                 bg-secondary: 背景為次要顏色
-                                 text-white: 文字顏色為白色 -->
-                            <i class="fa fa-calendar-alt"></i>
+                            <i class="fa fa-calendar-alt"></i> <!-- 日曆圖標 -->
                         </span>
-                        <input type="date" class="form-control">
-                        <!-- form-control: 設定輸入框的樣式，使其符合 Bootstrap 的預設樣式 -->
+                        <input type="date" name="date" class="form-control" id="dateInput" onchange="updateAvailableTimes()">
                     </div>
+
+                    <script>
+                        // 設置今天的日期為最小日期
+                        const today = new Date().toISOString().split("T")[0];
+                        document.getElementById("dateInput").setAttribute("min", today);
+                        // document.getElementById("dateInput").value = today;
+                        //讓網頁一開始，日期預設為今天
+                    </script>
 
                     <!-- 時間選擇 -->
                     <div class="input-group">
                         <span class="input-group-text bg-secondary text-white">
-                            <i class="fa fa-clock"></i>
+                            <i class="fa fa-clock"></i> <!-- 時鐘圖標 -->
                         </span>
-                        <select class="form-select">
-                            <!-- form-select: 設定下拉選單的樣式，使其符合 Bootstrap 的預設樣式 -->
-                            <option>下午8:00</option>
-                            <!-- 其他選項 -->
+                        <select class="form-select" id="timeSelect" name="time">
+                            <!-- JavaScript 會動態添加時間選項 -->
                         </select>
                     </div>
+
+                    <script>
+
+                        // updateAvailableTimes 函數：根據選擇的日期，向後端請求可用的時間選項
+                        function updateAvailableTimes() {
+                            // 取得用戶在日期選擇器中選擇的日期值
+                            const selectedDate = document.getElementById("dateInput").value;
+
+                            // 發送 AJAX 請求，將選擇的日期傳遞給後端的 GetAvailableTimes 方法
+                            fetch(`/SearchPage/GetAvailableTimes?selectedDate=${selectedDate}`)
+                                .then(response => response.json()) // 將回應轉換為 JSON 格式
+                                .then(times => {
+                                    // 取得時間選擇器的 DOM 元素
+                                    const timeSelect = document.getElementById("timeSelect");
+
+                                    // 清空時間選擇器中的現有選項
+                                    timeSelect.innerHTML = "";
+
+                                    // 遍歷後端返回的時間列表，並動態添加選項至時間選擇器
+                                    times.forEach(time => {
+                                        // 創建新的 <option> 元素
+                                        const option = document.createElement("option");
+                                        option.value = time; // 設定選項的值
+                                        option.textContent = time; // 設定選項的顯示文字
+                                        timeSelect.appendChild(option); // 將選項加入時間選擇器中
+                                    });
+                                });
+                        }
+
+                        // 初始化日期選擇器，設置今天為最早可選日期
+                        document.getElementById("dateInput").setAttribute("min", new Date().toISOString().split("T")[0]);
+                    </script>
 
                     <!-- 人數選擇 -->
                     <div class="input-group">
                         <span class="input-group-text bg-secondary text-white">
                             <i class="fa fa-user"></i>
                         </span>
-                        <select class="form-select">
-                            <option>2位</option>
-                            <!-- 其他選項 -->
+                        <select id="searchPeople" class="form-select" name="people">
+                            @for (int i = 1; i <= 8; i++)
+                            {
+                                @* <option value="@($"{i}位")">@($"{i}位")</option> *@
+                                <option value="@i">@($"{i} 位")</option>
+                            }
                         </select>
                     </div>
 
                     <!-- 關鍵字輸入框 -->
-                    <div class="input-group">
+                    <div class="w-100 w-sm-50 w-md-33 w-lg-25 input-group">
                         <span class="input-group-text bg-secondary text-white">
                             <i class="fa fa-search"></i>
                         </span>
-                        <input type="text" class="form-control" placeholder="地點、餐廳或料理">
+                        <input id="searchKeyword" name="keyword" type="text" class="form-control" placeholder="地點、餐廳或料理">
                     </div>
 
                     <!-- 搜尋按鈕 -->
-                    <button type="submit" class="btn btn-danger w-50">
-                        <!-- btn: 基本按鈕樣式
-                             btn-danger: 設定按鈕顏色為紅色
-                             w-50: 設定按鈕寬度為 50% -->
-                        尋找餐廳
-                    </button>
+                    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+                    <!-- 引入 Axios 庫，確保可以使用 axios -->
+
+                    <button id="searchButton" type="button" onclick="SearchApp.searchRestaurants()" class="fw-bold btn btn-danger w-50">尋找餐廳</button>
+
+                    @*                     <button type="submit" class="btn btn-danger w-50">
+                    <!-- btn: 基本按鈕樣式
+                    btn-danger: 設定按鈕顏色為紅色
+                    w-50: 設定按鈕寬度為 50% -->
+                    尋找餐廳2
+                    </button> *@
                 </form>
+                @* 搜尋按鈕的方法與邏輯 *@
+                <script>
+                    // 將代碼包裹在一個命名空間，避免全局作用域污染
+                    const SearchApp = {
+                        searchRestaurants: function () {
+                            // 獲取搜尋參數
+                            const keyword = document.getElementById("searchKeyword")?.value || "";
+                            const date = document.getElementById("dateInput")?.value || "";
+                            const time = document.getElementById("timeSelect")?.value || "";
+                            const people = document.getElementById("searchPeople")?.value || "";
+
+                            console.log("Search Parameters:", { keyword, date, time, people });
+
+                            // 檢查關鍵字是否存在
+
+
+                            // 組裝查詢參數
+                            const queryParams = new URLSearchParams({
+                                autoSearch: "true",
+                                keyword: keyword,
+                                date: date,
+                                time: time,
+                                people: people,
+                            }).toString();
+
+                            // 跳轉到搜尋頁面
+                            window.location.href = `/SearchPage/Index?${queryParams}`;
+                        },
+
+                        executeSearch: function (filters = {}) {
+                            console.log("執行搜尋，條件：", filters);
+
+                            axios.get(`/SearchPage/SearchRestaurants`, { params: filters })
+                                .then(function (response) {
+                                    const container = document.getElementById("searchResultsContainer");
+                                    if (container) {
+                                        container.innerHTML = response.data;
+                                        console.log("搜尋結果已更新");
+                                    } else {
+                                        console.error("未找到 `searchResultsContainer` 容器");
+                                    }
+                                })
+                                .catch(function (error) {
+                                    console.error("搜尋請求失敗：", error);
+                                });
+                        },
+
+                        init: function () {
+                            document.addEventListener("DOMContentLoaded", function () {
+                                console.log("搜尋頁面初始化");
+
+                                const urlParams = new URLSearchParams(window.location.search);
+                                const autoSearch = urlParams.get("autoSearch");
+
+                                // 從 URL 提取參數
+                                const keyword = urlParams.get("keyword") || "";
+                                const date = urlParams.get("date") || "";
+                                const time = urlParams.get("time") || "";
+                                const people = urlParams.get("people") || "";
+
+                                console.log("接收到的參數：", { keyword, date, time, people });
+
+                                // 填充搜尋欄中的輸入框
+                                const searchKeyword = document.getElementById("searchKeyword");
+                                const dateInput = document.getElementById("dateInput");
+                                const timeSelect = document.getElementById("timeSelect");
+                                const searchPeople = document.getElementById("searchPeople");
+
+                                if (searchKeyword) searchKeyword.value = keyword;
+                                if (dateInput) dateInput.value = date;
+                                if (timeSelect) timeSelect.value = time;
+                                if (searchPeople) searchPeople.value = people;
+
+                                // 如果 `autoSearch=true`，自動執行搜尋
+                                if (autoSearch === "true") {
+                                    SearchApp.executeSearch({ keyword, date, time, people });
+                                }
+                            });
+                        },
+                    };
+
+                    // 初始化應用
+                    SearchApp.init();
+
+
+
+
+
+
+
+                    document.addEventListener("DOMContentLoaded", function () {
+                        console.log("搜尋頁面腳本已執行"); // 檢查腳本是否執行
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const keyword = urlParams.get("keyword") || ""; // 從 URL 獲取 keyword
+                        console.log("接收到的 URL 關鍵字：", keyword);
+
+                        const searchInput = document.getElementById("searchKeyword");
+                        if (!searchInput) {
+                            console.error("未找到輸入框 `searchKeyword`");
+                        } else {
+                            searchInput.value = keyword; // 填充輸入框
+                            console.log("已填充輸入框，值為：", searchInput.value);
+                        }
+                    });
+                </script>
+
+                <script>
+                    //帶入預設時間
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const dateInput = document.getElementById("dateInput");
+                        const timeSelect = document.getElementById("timeSelect");
+                        const searchPeople = document.getElementById("searchPeople");
+
+                        // 從 URL 取得參數
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const selectedDate = urlParams.get("date");
+                        const selectedTime = urlParams.get("time");
+                        const selectedPeople = urlParams.get("people");
+
+                        // 設置今天的日期作為最小值
+                        const today = new Date();
+                        const year = today.getFullYear();
+                        const month = String(today.getMonth() + 1).padStart(2, "0");
+                        const day = String(today.getDate()).padStart(2, "0");
+                        const todayString = `${year}-${month}-${day}`;
+
+                        // 初始化日期選擇器
+                        dateInput.setAttribute("min", todayString);
+                        dateInput.value = selectedDate || todayString;
+
+                        // 初始化時間選擇器
+                        updateAvailableTimes(selectedTime);
+
+                        // 初始化人數選擇器
+                        if (searchPeople) {
+                            const defaultPeople = selectedPeople || "2"; // 預設為 "2 位"
+                            Array.from(searchPeople.options).forEach(option => {
+                                if (option.value === defaultPeople) {
+                                    option.selected = true;
+                                }
+                            });
+                        }
+
+                        // 日期改變時更新時間選項
+                        dateInput.addEventListener("change", () => updateAvailableTimes());
+                    });
+
+                    // 更新時間選擇器
+                    function updateAvailableTimes(selectedTime = "") {
+                        const dateInput = document.getElementById("dateInput");
+                        const timeSelect = document.getElementById("timeSelect");
+                        const selectedDate = dateInput.value;
+
+                        // 如果未選擇日期，直接返回
+                        if (!selectedDate) {
+                            console.error("未選擇日期，無法更新時間選項");
+                            timeSelect.innerHTML = '<option value="">請選擇時間</option>';
+                            return;
+                        }
+
+                        // 發送請求到後端獲取可用時間
+                        fetch(`/SearchPage/GetAvailableTimes?selectedDate=${selectedDate}`)
+                            .then(response => response.json())
+                            .then(times => {
+                                // 清空時間選擇器中的現有選項
+                                timeSelect.innerHTML = "";
+
+                                // 添加占位選項
+                                const placeholderOption = document.createElement("option");
+                                placeholderOption.value = "";
+                                placeholderOption.textContent = "請選擇時間";
+                                timeSelect.appendChild(placeholderOption);
+
+                                // 添加時間選項
+                                times.forEach(time => {
+                                    const option = document.createElement("option");
+                                    option.value = time;
+                                    option.textContent = time;
+
+                                    // 如果時間與 URL 中的時間匹配，設為選中
+                                    if (time === selectedTime) {
+                                        option.selected = true;
+                                    }
+
+                                    timeSelect.appendChild(option);
+                                });
+
+                                // 如果未指定選中的時間，且有可用選項，預設選中第一個
+                                if (!selectedTime && times.length > 0) {
+                                    timeSelect.selectedIndex = 1;
+                                }
+                            })
+                            .catch(error => {
+                                console.error("無法載入可用時間選項:", error);
+                            });
+                    }
+
+
+
+                </script>
+            </div>
+            <!-- 排序按鈕區 -->
+            <div class="container">
+                <div class="row align-items-center m-3">
+                    <!-- 左側按鈕區域 -->
+                    <div id="restaurant-item" class="col-auto">
+                        <button class="fw-bold btn-lg btn btn-outline-primary me-2" onclick="sortByRating()">評分高低</button>
+
+                        @* <button class="btn btn-outline-primary" onclick="sortByDistance()">距離遠近</button> *@
+                        <button id="sortByDistanceButton" class="fw-bold btn-lg btn btn-outline-primary">距離遠近</button>
+                    </div>
+                    <script>
+                        function sortByRating() {
+                            const selectedDistricts = [];
+                            document.querySelectorAll('.form-check-input:checked').forEach((checkbox) => {
+                                selectedDistricts.push(checkbox.value); // 收集選中的地區名稱
+                            });
+
+                            const keyword = document.getElementById('searchKeyword')?.value || ''; // 收集關鍵字
+
+                            fetch('/SearchPage/SortByRating', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    keyword: keyword,
+                                    selectedDistricts: selectedDistricts
+                                }) // 傳送關鍵字和地區
+                            })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error(`HTTP error! status: ${response.status}`);
+                                    }
+                                    return response.text(); // 接收部分視圖的 HTML
+                                })
+                                .then(html => {
+                                    const container = document.getElementById('searchResultsContainer');
+                                    container.innerHTML = html; // 更新篩選結果
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    document.getElementById('searchResultsContainer').innerHTML = '<p style="color: red;">排序失敗，請稍後再試。</p>';
+                                });
+                        }
+
+                    </script>
+                    <!-- 中間的地點提示文字 -->
+                    <div class="col-9 text-center">
+                        <!--col 影響它的位置-->
+                        <p class="fw-bold fs-5 mb-0">
+                            您現在的地點在台中市嗎？
+                            <a href="#" id="getLocation" class="text-danger">
+                                <i class="bi bi-geo-alt-fill"></i> 獲得現在地點
+                            </a>
+                        </p>
+                        <p id="locationSection"></p>
+
+
+                    </div>
+
+                    <script>
+                        // 利用 Geolocation API，當使用者點擊按鈕時，請求位置資訊
+                        // 綁定按鈕與顯示結果的區域
+                        const getLocationBtn = document.getElementById("getLocation");
+                        const locationSection = document.getElementById("locationSection");
+                        const districtForm = document.getElementById("districtForm");
+
+                        // 台中市 29 區的經緯度範圍 (必須在 script 頂部定義)
+                        const TaichungDistricts = [
+                            { name: "中區", minLat: 24.1368, maxLat: 24.1445, minLng: 120.6760, maxLng: 120.6879 },
+                            { name: "東區", minLat: 24.1338, maxLat: 24.1595, minLng: 120.6830, maxLng: 120.7050 },
+                            { name: "南區", minLat: 24.1110, maxLat: 24.1330, minLng: 120.6490, maxLng: 120.6810 },
+                            { name: "西區", minLat: 24.1335, maxLat: 24.1512, minLng: 120.6475, maxLng: 120.6735 },
+                            { name: "北區", minLat: 24.1510, maxLat: 24.1725, minLng: 120.6605, maxLng: 120.6875 },
+                            { name: "西屯區", minLat: 24.1320, maxLat: 24.2060, minLng: 120.5820, maxLng: 120.6430 },
+                            { name: "北屯區", minLat: 24.1670, maxLat: 24.2190, minLng: 120.6530, maxLng: 120.7400 },
+                            { name: "南屯區", minLat: 24.1120, maxLat: 24.1605, minLng: 120.5940, maxLng: 120.6600 },
+                            { name: "太平區", minLat: 24.0990, maxLat: 24.1980, minLng: 120.7200, maxLng: 120.7600 },
+                            { name: "大里區", minLat: 24.1000, maxLat: 24.1400, minLng: 120.6800, maxLng: 120.7200 },
+                            { name: "霧峰區", minLat: 24.0350, maxLat: 24.1050, minLng: 120.6700, maxLng: 120.7300 },
+                            { name: "烏日區", minLat: 24.0900, maxLat: 24.1200, minLng: 120.6200, maxLng: 120.6700 },
+                            { name: "豐原區", minLat: 24.2500, maxLat: 24.2900, minLng: 120.6900, maxLng: 120.7600 },
+                            { name: "后里區", minLat: 24.2900, maxLat: 24.3500, minLng: 120.7100, maxLng: 120.7900 },
+                            { name: "石岡區", minLat: 24.2600, maxLat: 24.3000, minLng: 120.7900, maxLng: 120.8300 },
+                            { name: "東勢區", minLat: 24.2600, maxLat: 24.3500, minLng: 120.8200, maxLng: 120.9200 },
+                            { name: "和平區", minLat: 24.2200, maxLat: 24.5000, minLng: 120.9400, maxLng: 121.1600 },
+                            { name: "新社區", minLat: 24.1900, maxLat: 24.2700, minLng: 120.8200, maxLng: 120.9200 },
+                            { name: "潭子區", minLat: 24.2000, maxLat: 24.2500, minLng: 120.7000, maxLng: 120.7400 },
+                            { name: "大雅區", minLat: 24.2100, maxLat: 24.2600, minLng: 120.6400, maxLng: 120.7000 },
+                            { name: "神岡區", minLat: 24.2500, maxLat: 24.2900, minLng: 120.6700, maxLng: 120.7100 },
+                            { name: "大肚區", minLat: 24.1200, maxLat: 24.1800, minLng: 120.5200, maxLng: 120.6200 },
+                            { name: "沙鹿區", minLat: 24.2000, maxLat: 24.2600, minLng: 120.5300, maxLng: 120.6100 },
+                            { name: "龍井區", minLat: 24.1800, maxLat: 24.2200, minLng: 120.4800, maxLng: 120.5600 },
+                            { name: "梧棲區", minLat: 24.2500, maxLat: 24.2700, minLng: 120.5000, maxLng: 120.5700 },
+                            { name: "清水區", minLat: 24.2400, maxLat: 24.2800, minLng: 120.5200, maxLng: 120.5900 },
+                            { name: "大甲區", minLat: 24.3400, maxLat: 24.3800, minLng: 120.6100, maxLng: 120.6700 },
+                            { name: "外埔區", minLat: 24.3200, maxLat: 24.3500, minLng: 120.6400, maxLng: 120.7000 },
+                            { name: "大安區", minLat: 24.3600, maxLat: 24.4000, minLng: 120.5800, maxLng: 120.6400 },
+                        ];
+
+
+
+
+                        document.addEventListener("DOMContentLoaded", () => {
+                            const savedDescription = localStorage.getItem("locationDescription");
+                            if (savedDescription) {
+                                locationSection.innerHTML = savedDescription;
+
+                                // 可選：清除存儲的內容以避免干擾後續操作
+                                localStorage.removeItem("locationDescription");
+                            }
+                        });
+
+
+
+
+                        // 點擊按鈕事件
+                        getLocationBtn.addEventListener("click", (event) => {
+                            event.preventDefault(); // 防止 <a> 的預設跳轉
+
+                            // 確認瀏覽器是否支援 Geolocation API
+                            if (navigator.geolocation) {
+                                locationSection.innerHTML = "正在取得您的位置...";
+                                navigator.geolocation.getCurrentPosition(
+                                    (position) => {
+                                        const latitude = position.coords.latitude; // 使用者的緯度
+                                        const longitude = position.coords.longitude; // 使用者的經度
+
+                                        // 判斷行政區
+                                        const district = getDistrictFromCoordinates(latitude, longitude);
+
+                                        // 更新畫面內容
+                                        if (district) {
+                                            // 使用 Bootstrap 的 alert-success 類別顯示成功訊息
+                                            locationSection.className = "";
+                                            locationSection.innerHTML = `您目前的位置為：台中市${district}`;
+
+                                            // 存儲位置信息到 localStorage
+                                            localStorage.setItem("locationDescription", locationSection.innerHTML);
+
+                                            // 更新隱藏的輸入欄位並提交表單
+                                            districtInput.value = district;
+                                            districtForm.submit();
+                                        } else {
+                                            // 使用 Bootstrap 的 alert-danger 類別顯示錯誤訊息
+                                            locationSection.className = "";
+                                            locationSection.innerHTML = "您的位置不在台中市範圍內。";
+
+                                            districtForm.submit();
+                                        }
+
+                                        // 將經緯度傳送到後端（可選）
+                                        sendLocationToServer(latitude, longitude);
+                                    },
+                                    (error) => {
+                                        // 處理錯誤
+                                        locationSection.innerHTML = "無法取得您的位置資訊，請檢查瀏覽器設定。";
+                                        districtForm.submit();
+                                    }
+                                );
+                            } else {
+                                locationSection.innerHTML = "您的瀏覽器不支援地理定位功能。";
+                                districtForm.submit();
+                            }
+                        });
+
+                        // 判斷經緯度屬於哪個區域
+                        function getDistrictFromCoordinates(lat, lng) {
+                            for (const district of TaichungDistricts) {
+                                if (
+                                    lat >= district.minLat && // 符合最小緯度
+                                    lat <= district.maxLat && // 符合最大緯度
+                                    lng >= district.minLng && // 符合最小經度
+                                    lng <= district.maxLng    // 符合最大經度
+                                ) {
+                                    return district.name; // 返回區域名稱
+                                }
+                            }
+                            return null; // 找不到匹配的區域
+                        }
+
+                        // 傳送經緯度到後端（可選）
+                        function sendLocationToServer(lat, lng) {
+                            fetch('/SearchPage/SaveUserLocation', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ latitude: lat, longitude: lng }),
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log('伺服器回應:', data);
+                                })
+                                .catch(error => {
+                                    console.error('錯誤:', error);
+                                });
+                        }
+
+                    </script>
+
+                    <script>
+                        // 通用函數：獲取經緯度並發送請求
+                        function fetchRestaurantsByLocation(isSortingByDistance) {
+                            // 使用地理位置 API 獲取使用者當前的經緯度
+                            navigator.geolocation.getCurrentPosition(
+                                (position) => {
+                                    const latitude = position.coords.latitude; // 使用者緯度
+                                    const longitude = position.coords.longitude; // 使用者經度
+
+                                    // 傳遞經緯度到後端
+                                    fetch('/SearchPage/SortRestaurantsByLocation', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json', // 指定 JSON 格式
+                                        },
+                                        body: JSON.stringify({
+                                            latitude: latitude,
+                                            longitude: longitude,
+                                            sortByDistance: isSortingByDistance, // 傳遞排序參數
+                                        }),
+                                    })
+                                        .then(response => response.text()) // 使用 text() 接收 HTML
+                                        .then(html => {
+                                            // 確保顯示區域存在
+                                            const container = document.getElementById('searchResultsContainer');
+                                            if (!container) {
+                                                console.error('無法找到顯示餐廳列表的容器，請檢查 HTML 結構。');
+                                                return;
+                                            }
+
+                                            // 插入返回的 HTML 到容器中
+                                            container.innerHTML = html;
+                                        })
+                                        .catch(error => {
+                                            console.error('發生錯誤:', error);
+                                            alert('無法獲取餐廳列表，請稍後再試！');
+                                        });
+                                },
+                                (error) => {
+                                    console.error('地理位置獲取失敗:', error);
+                                    alert("無法獲取您的位置，請檢查瀏覽器的定位設置！");
+                                }
+                            );
+                        }
+
+                        // // 初始化：頁面載入時加載餐廳列表（預設按評分排序）
+                        // document.addEventListener('DOMContentLoaded', () => {
+                        //     fetchRestaurantsByLocation(false); // 預設不按距離排序
+                        // });
+
+                        // 綁定按鈕事件：按距離排序
+                        const sortByDistanceButton = document.getElementById('sortByDistanceButton');
+                        if (sortByDistanceButton) {
+                            sortByDistanceButton.addEventListener('click', () => {
+                                fetchRestaurantsByLocation(true); // 按距離排序
+                            });
+                        } else {
+                            console.error('無法找到按鈕，請檢查 HTML 結構。');
+                        }
+                    </script>
+
+                </div>
             </div>
         </div>
     </div>

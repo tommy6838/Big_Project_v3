@@ -1,0 +1,158 @@
+﻿@model IEnumerable<Big_Project_v3.Models.Restaurant>
+
+@{
+	ViewData["Title"] = "Home";
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js" integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+@* 營業額 訂單數量 定位人數 評論數量 *@
+@{
+	int todayReservations = @ViewBag.todayReservations; // 訂單數量
+	int todayReviews = @ViewBag.todayReviews;           // 評論數量
+	int priceRange = @ViewBag.priceRange;               // 餐廳價錢
+	int todayNumAdults = @ViewBag.todayNumAdults;       // 大人訂位人數
+	int todayNumChildren = @ViewBag.todayNumChildren;   // 小孩訂位人數
+	int total = (priceRange * (todayNumAdults * 2 + todayNumChildren)); // 營業額
+	string totalNTD = $"NT${total:N0}"; // NT$營業額
+
+	int yesterdayReservations = @ViewBag.yesterdayReservations; // 昨天訂單數量
+	int yesterdayReviews = @ViewBag.yesterdayReviews;           // 昨天評論數量
+	int yesterdayNumAdults = @ViewBag.yesterdayNumAdults;       // 昨天大人訂位人數
+	int yesterdayNumChildren = @ViewBag.yesterdayNumChildren;   // 昨天小孩訂位人數
+	int yesterdaytotal = (priceRange * (yesterdayNumAdults * 2 + yesterdayNumChildren)); // 昨天營業額
+
+	int gapReservations = todayReservations - yesterdayReservations;
+	int gapReviews = todayReviews - yesterdayReviews;
+	int gapPeople = (todayNumAdults + todayNumChildren) - (yesterdayNumAdults + yesterdayNumChildren);
+	int gaptotal = total - yesterdaytotal;
+	string gaptotalNTD = $"{gaptotal:N0}";
+}
+
+<style>
+	.bi-dash {
+		color: gray;
+	}
+
+	.bi-arrow-up {
+		color: red;
+	}
+
+	.bi-arrow-down {
+		color: green;
+	}
+	.red{
+		color: red;
+	}
+	.green{
+		color: green;
+	}
+}
+</style>
+
+<h1>首頁</h1>
+<hr />
+<h3>今日摘要</h3>
+
+<div class="row mt-3 container-fluid d-flex flex-lg-nowrap flex-wrap">
+	<div class="card col-lg-6 col-12 mb-3 me-lg-2">
+		<div class="card-header fs-5">訂單數量</div>
+		<div>
+			<div class="d-flex justify-content-center align-items-center">
+				<div class="card-body fs-1 fs-sm-5">@todayReservations</div>
+				<div class="fs-4 fs-sm-5" style="text-align: center;">
+					@if (gapReservations > 0)
+					{
+						<span class="red">@gapReservations</span>
+						<i class="bi bi-arrow-up"></i>
+					}
+					else if (gapReservations < 0)
+					{
+						<span class="green">@gapReservations</span>
+						<i class="bi bi-arrow-down"></i>
+					}
+					else
+					{
+						@gapReservations
+						<i class="bi bi-dash"></i>
+					}
+					<div style="font-size:0.9rem; color:gray;">與昨天相比</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card col-lg-6 col-12 mb-3">
+		<div class="card-header fs-5">人數</div>
+		<div class="d-flex justify-content-center align-items-center">
+			<div class="card-body fs-1 fs-sm-5">@(todayNumAdults + todayNumChildren)</div>
+			<div class="fs-4 fs-sm-5" style="text-align: center;">
+				@if (gapPeople > 0)
+				{
+					<span class="red">@gapPeople</span>
+					<i class="bi bi-arrow-up"></i>
+				}
+				else if (gapPeople < 0)
+				{
+					<span class="green">@gapPeople</span>
+					<i class="bi bi-arrow-down"></i>
+				}
+				else
+				{
+					@gapPeople
+					<i class="bi bi-dash"></i>
+				}
+				<div style="font-size:0.9rem; color:gray;">與昨天相比</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row mt-3 container-fluid d-flex flex-lg-nowrap flex-wrap">
+	<div class="card col-lg-6 col-12 mb-3 me-lg-2">
+		<div class="card-header fs-5">營業額</div>
+		<div class="d-flex justify-content-center align-items-center">
+			<div class="card-body fs-1 fs-sm-5">@totalNTD</div>
+			<div class="fs-4 fs-sm-5" style="text-align: center;">
+				@if (gaptotal > 0)
+				{
+					<span class="red">@gaptotalNTD</span>
+					<i class="bi bi-arrow-up"></i>
+				}
+				else if (gaptotal < 0)
+				{
+					<span class="green">@gaptotalNTD</span>
+					<i class="bi bi-arrow-down"></i>
+				}
+				else
+				{
+					@gaptotalNTD
+					<i class="bi bi-dash"></i>
+				}
+				<div style="font-size:0.9rem; color:gray;">與昨天相比</div>
+			</div>
+		</div>
+	</div>
+	<div class="card col-lg-6 col-12 mb-3">
+		<div class="card-header fs-5">評論數量</div>
+		<div class="d-flex justify-content-center align-items-center">
+			<div class="card-body fs-1 fs-sm-5">@todayReviews</div>
+			<div class="fs-4 fs-sm-5" style="text-align: center;">
+				@if (gapReviews > 0)
+				{
+					<span class="red">@gapReviews</span>
+					<i class="bi bi-arrow-up"></i>
+				}
+				else if (gapReviews < 0)
+				{
+					<span class="green">@gapReviews</span>
+					<i class="bi bi-arrow-down"></i>
+				}
+				else
+				{
+					@gapReviews
+					<i class="bi bi-dash"></i>
+				}
+				<div style="font-size:0.9rem; color:gray;">與昨天相比</div>
+			</div>
+		</div>
+	</div>
+</div>

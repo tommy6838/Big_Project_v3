@@ -1,0 +1,96 @@
+﻿@model IEnumerable<Big_Project_v3.Models.Restaurant>
+
+@{
+    ViewData["Title"] = "ReviewWeek";
+}
+
+<h1>報告 - 評論數量</h1>
+<hr />
+
+<div class="mb-3">
+    <a href="@Url.Action("Report", "Backstage")" class="btn btn-primary md-3">訂單數量</a>
+    <a href="@Url.Action("PeopleToday", "Backstage")" class="btn btn-primary md-3">人數</a>
+    <a href="@Url.Action("MoneyToday", "Backstage")" class="btn btn-primary md-3">營業額</a>
+    <a href="@Url.Action("ReviewWeek", "Backstage")" class="btn btn-primary md-3">評論數量</a>
+</div>
+
+<div>
+    <a href="@Url.Action("ReviewWeek", "Backstage")" class="btn btn-outline-primary md-3">本週</a>
+    <a href="@Url.Action("ReviewMonth", "Backstage")" class="btn btn-outline-primary">本月</a>
+</div>
+
+<div class="container mt-3">
+    <h3 class="mb-4">本週總評論數量 : @ViewBag.Total_Week</h3>
+    <h3 class="mb-2">本週評論數量分佈</h3>
+    <canvas id="reviewChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // 取得後端傳遞過來的資料
+    const weeklyLabels = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+    var WeeklyData = @Html.Raw(Json.Serialize(((IEnumerable<dynamic>)ViewBag.WeeklyData).Select(d => d.Count)));
+    
+    // 繪製折線圖
+    var ctx = document.getElementById('reviewChart').getContext('2d');
+    var reviewChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: weeklyLabels, // 日期
+            datasets: [{
+                label: '評論數量',
+                data: WeeklyData,
+                borderColor: 'rgba(251, 188, 4, 1)',
+                backgroundColor: 'rgba(251, 188, 4, 0.2)',
+                fill: true
+            }]
+        },
+		options: {
+			responsive: true,
+			plugins: {
+				legend: {
+					display: true,
+					position: 'top',
+					labels: {
+						font: {
+							size: 26 // 設定圖例文字大小為 26px
+						}
+					}
+				},
+				tooltip: {
+					enabled: true
+				}
+			},
+			scales: {
+				x: {
+					title: {
+						display: true,
+						text: '',
+						font: {
+							size: 26
+						}
+					},
+					ticks: {
+						font: {
+							size: 26
+						}
+					}
+				},
+				y: {
+					beginAtZero: true,
+					title: {
+						display: true,
+						text: ''
+					},
+					ticks: {
+						stepSize: 1, // 設定步進為 1，確保顯示整數
+						font: {
+							size: 26 // 設定文字大小為 26px
+						}
+					}
+				}
+			}
+		}
+    });
+</script>

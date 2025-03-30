@@ -1,62 +1,181 @@
-﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-.mylogo{
-    width: 200px;
-    height: 50px;
+﻿/* 設置頂部欄樣式 */
+.top-bar {
+    background-color: #EBEBEB;
+    text-align: right;
+    padding: 5px 20px;
+    font-size: 14px;
 }
 
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+    .top-bar a {
+        color: #2A2B2B;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+        .top-bar a:hover {
+            color: #3D3D3D;
+            text-decoration: underline;
+        }
+
+/* 調整 navbar 排版 */
+.navbar {
+    background-color: #EFE9E9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap; /* 禁止內容換行 */
 }
 
-footer a {
-  color:#fff;
+/* LOGO (navbar-brand) 樣式優化 */
+.navbar-brand {
+    white-space: nowrap; /* 禁止 LOGO 換行 */
+    text-align: center;
+    word-break: keep-all; /* 防止斷字 */
+    display: flex;
+    align-items: center;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    /* LOGO圖片響應式縮放 */
+    .navbar-brand img {
+        max-height: 8vh; /* 高度最大為 8% 的視窗高度 */
+        width: auto; /* 保持寬高比例 */
+    }
+
+/* 側邊欄樣式 */
+.offcanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1050; /* 確保側邊欄在最上層 */
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
+    .offcanvas.show {
+        transform: translateX(0);
+    }
 
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
-}
-
-.footer {
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #000;
     position: absolute;
-    bottom: 0;
-    width: 100%;
-    white-space: nowrap;
-    line-height: 60px;
+    top: 10px;
+    right: 10px;
 }
 
-footer .btn {
+.navbar-toggler {
+    border: none;
+    color: lawngreen;
+    background-color: aquamarine;
+}
+
+/* 會員按鈕樣式 */
+.memberbutton {
+    gap: 5px; /* 替代 margin，調整按鈕間距 */
+    margin-right: 20px;
+}
+
+/* 登入按鈕 */
+#loginBtn {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* 替代 margin，調整按鈕間距 */
+    margin-right: 5px;
+    flex-wrap: nowrap;
+    justify-content: center;
+    width: 100px;
+}
+
+.btn-outline-danger {
+    border-color: #B81E16;
+    color: #B81E16;
+}
+
+    .btn-outline-danger:hover {
+        background-color: #B81E16;
+        color: white;
+    }
+
+.dropdown-menu-end {
+    right: 0;
+    left: auto;
+}
+
+
+/* 響應式處理 (小螢幕排版) */
+@media (max-width: 576px) {
+    .container-fluid {
+        flex-direction: column;
+        align-items: flex-start; /* 讓內容在小螢幕上從上到下排列 */
+    }
+
+    .memberbutton {
+        justify-content: flex-end; /* 按鈕在小螢幕靠右 */
+        width: 100%; /* 占滿整行 */
+    }
+}
+
+/*會員下拉菜單 */
+.dropdown-menu {
+    margin: 0 15px 0 15px;
+    background-color: #ffffff; /* 背景顏色 */
+    border: 1px solid #b7b7b7; /* 邊框 */
+    border-radius: 5px; /* 圓角 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 陰影效果 */
+    left: 0;
+    right: auto;
+    transform: translateX(-70%) translateY(4px); /* 根據需要調整位置 */
+}
+
+.dropdown-item {
+    color: #333; /* 文字顏色 */
+    padding: 5px 10px; /* 項目內邊距 */
+    text-align: center;
+    transition: background-color 0.5s, color 0.5s; /* 過渡效果 */
+}
+
+    .dropdown-item:hover {
+        background-color: #EBEBEB; /* 滑過時背景顏色 */
+    }
+
+/*footer*/
+.indexFooter {
+    background-color: #212121;
+    color: #b7b7b7;
+}
+
+
+    .indexFooter a {
+        color: #b7b7b7;
+    }
+
+        .indexFooter a:hover {
+            color: azure;
+        }
+
+.iconbtn {
+    color: #FFF;
+}
+
+.footerbtn {
     font-weight: bold;
     color: white;
     background-color: #D25823;
 }
 
-    footer .btn:hover {
+    .footerbtn:hover {
         background-color: #C53F0F
     }
+
+
+/*去除bootstrap案輾點擊後的邊框*/
+.btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
+    outline: none;
+    box-shadow: none;
+}

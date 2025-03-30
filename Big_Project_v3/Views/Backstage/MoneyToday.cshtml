@@ -1,0 +1,100 @@
+﻿@model IEnumerable<Big_Project_v3.Models.Restaurant>
+
+@{
+    ViewData["Title"] = "MoneyToday";
+}
+
+@{
+    string totalNTD = $"NT${ViewBag.Total_Money:N0}"; // NT$營業額
+}
+
+<h1>報告 - 營業額</h1>
+<hr />
+
+<div class="mb-3">
+    <a href="@Url.Action("Report", "Backstage")" class="btn btn-primary md-3">訂單數量</a>
+    <a href="@Url.Action("PeopleToday", "Backstage")" class="btn btn-primary md-3">人數</a>
+    <a href="@Url.Action("MoneyToday", "Backstage")" class="btn btn-primary md-3">營業額</a>
+    <a href="@Url.Action("ReviewWeek", "Backstage")" class="btn btn-primary md-3">評論數量</a>
+</div>
+
+<div>
+    <a href="@Url.Action("MoneyToday", "Backstage")" class="btn btn-outline-primary md-3">本日</a>
+    <a href="@Url.Action("MoneyWeek", "Backstage")" class="btn btn-outline-primary md-3">本週</a>
+    <a href="@Url.Action("MoneyMonth", "Backstage")" class="btn btn-outline-primary">本月</a>
+</div>
+
+<div class="container mt-3">
+    <h3 class="mb-4">本日營業額 : @totalNTD</h3>
+    <h3 class="mb-2">本日營業額分佈</h3>
+    <canvas id="moneyChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // 取得後端傳遞過來的資料
+    var hourlyRevenue = @Html.Raw(Json.Serialize(ViewBag.HourlyRevenue));
+
+    // 繪製折線圖
+    var ctx = document.getElementById('moneyChart').getContext('2d');
+    var moneyChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: Array.from({ length: 24 }, (_, i) => i), // 0~23 小時標籤
+            datasets: [{
+                label: '營業額',
+                data: hourlyRevenue,
+                borderColor: 'rgba(0, 124, 255, 1)',
+                backgroundColor: 'rgba(0, 124, 255, 0.2)',
+                fill: true
+            }]
+        },
+		options: {
+			responsive: true,
+			plugins: {
+				legend: {
+					display: true,
+					position: 'top',
+					labels: {
+						font: {
+							size: 26 // 設定圖例文字大小為 26px
+						}
+					}
+				},
+				tooltip: {
+					enabled: true
+				}
+			},
+			scales: {
+				x: {
+					title: {
+						display: true,
+						text: '時間',
+						font: {
+							size: 26
+						}
+					},
+					ticks: {
+						font: {
+							size: 26
+						}
+					}
+				},
+				y: {
+					beginAtZero: true,
+					title: {
+						display: true,
+						text: ''
+					},
+					ticks: {
+						stepSize: 5000, // 設定步進為 1，確保顯示整數
+						font: {
+							size: 26 // 設定文字大小為 26px
+						}
+					}
+				}
+			}
+		}
+    });
+</script>

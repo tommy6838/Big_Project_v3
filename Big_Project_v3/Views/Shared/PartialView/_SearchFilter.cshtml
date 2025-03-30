@@ -1,0 +1,278 @@
+﻿@* Views/Shared/PartialView/_FilterOptions.cshtml *@
+@model IEnumerable<Big_Project_v3.ViewModels.SearchRestaurantViewModel>
+
+
+<div class="w-80 bg-light p-3 rounded">
+    <!-- bg-light: 設定背景顏色為淺色（light）
+         p-3: 設定四周的內距為 3（相當於 1rem）
+         rounded: 設置圓角，使區塊邊緣有圓角效果 -->
+
+    <h4 class="fw-bold text-dark">篩選選項</h4>
+    <!-- text-dark: 設定文字顏色為深色 -->
+    <!-- 用餐選項 -->
+@*     <div class="mb-4">
+        <!-- mb-4: 設定底部外距為 4（相當於 1.5rem） -->
+        <h6>用餐選項</h6>
+        <div class="form-check">
+            <!-- form-check: 設置為表單選項項目容器 -->
+            <input class="form-check-input" type="radio" name="diningOption" id="dineIn" checked>
+            <!-- form-check-input: 用於設置單選或複選框樣式
+                 type="radio": 設定為單選框
+                 name="diningOption": 表單選項名稱，同一名稱表示互斥選項
+                 id="dineIn": 該項目的唯一標識符
+                 checked: 預設選中該項 -->
+
+            <label class="form-check-label" for="dineIn">
+                <!-- form-check-label: 標籤樣式，與 input 元素保持對齊 -->
+                包含內用
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="diningOption" id="delivery">
+            <label class="form-check-label" for="delivery">僅提供外送</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="diningOption" id="takeOut">
+            <label class="form-check-label" for="takeOut">僅提供外帶</label>
+        </div>
+    </div> 
+
+    <!-- 座位選擇 -->
+    <div class="mb-4">
+        <h6>座位選擇</h6>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="standardSeat">
+            <!-- type="checkbox": 設定為複選框 -->
+            <label class="form-check-label" for="standardSeat">一般座位</label>
+        </div>
+    </div>*@
+
+    <!-- 價位選擇 -->
+    <div class="mb-4">
+        <h6>價位</h6>
+        <div class="btn-group" role="group" aria-label="Price Range">
+            <!-- 篩選按鈕 -->
+            <button type="button" class="btn btn-outline-secondary" onclick="filterByPriceRange('$')">$</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="filterByPriceRange('$$')">$$</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="filterByPriceRange('$$$')">$$$</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="filterByPriceRange('$$$$')">$$$$</button>
+        </div>
+    </div>
+
+    <script>
+        // 發送篩選條件到後端
+        function filterByPriceRange(priceRange) {
+            fetch('/SearchPage/FilterRestaurantsByPrice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ priceRange: priceRange }),
+            })
+                .then(response => response.text()) // 接收 HTML 結果
+                .then(html => {
+                    const container = document.getElementById('searchResultsContainer');
+                    container.innerHTML = html; // 插入返回的 HTML 結果
+                })
+                .catch(error => {
+                    console.error('篩選發生錯誤:', error);
+                    alert('篩選失敗，請稍後再試！');
+                });
+        }
+    </script>
+
+        <!-- 地區選擇 -->
+    <!-- 地區選擇 -->
+    <div class="mb-4">
+        <h4 class="fw-bolder">地區</h4>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="beitunDistrict" value="北屯區">
+            <label class="form-check-label" for="beitunDistrict">北屯區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="xituanDistrict" value="西屯區">
+            <label class="form-check-label" for="xituanDistrict">西屯區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="daliDistrict" value="大里區">
+            <label class="form-check-label" for="daliDistrict">大里區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="taipingDistrict" value="太平區">
+            <label class="form-check-label" for="taipingDistrict">太平區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="nantunDistrict" value="南屯區">
+            <label class="form-check-label" for="nantunDistrict">南屯區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="fengyuanDistrict" value="豐原區">
+            <label class="form-check-label" for="fengyuanDistrict">豐原區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="northDistrict" value="北區">
+            <label class="form-check-label" for="northDistrict">北區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="southDistrict" value="南區">
+            <label class="form-check-label" for="southDistrict">南區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="westDistrict" value="西區">
+            <label class="form-check-label" for="westDistrict">西區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="tanziDistrict" value="潭子區">
+            <label class="form-check-label" for="tanziDistrict">潭子區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="shaluDistrict" value="沙鹿區">
+            <label class="form-check-label" for="shaluDistrict">沙鹿區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="dayaDistrict" value="大雅區">
+            <label class="form-check-label" for="dayaDistrict">大雅區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="qingshuiDistrict" value="清水區">
+            <label class="form-check-label" for="qingshuiDistrict">清水區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="wuriDistrict" value="烏日區">
+            <label class="form-check-label" for="wuriDistrict">烏日區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="longjingDistrict" value="龍井區">
+            <label class="form-check-label" for="longjingDistrict">龍井區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="eastDistrict" value="東區">
+            <label class="form-check-label" for="eastDistrict">東區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="dajiaDistrict" value="大甲區">
+            <label class="form-check-label" for="dajiaDistrict">大甲區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="shengangDistrict" value="神岡區">
+            <label class="form-check-label" for="shengangDistrict">神岡區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="wufengDistrict" value="霧峰區">
+            <label class="form-check-label" for="wufengDistrict">霧峰區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="wuqiDistrict" value="梧棲區">
+            <label class="form-check-label" for="wuqiDistrict">梧棲區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="daduDistrict" value="大肚區">
+            <label class="form-check-label" for="daduDistrict">大肚區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="houliDistrict" value="后里區">
+            <label class="form-check-label" for="houliDistrict">后里區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="dongshiDistrict" value="東勢區">
+            <label class="form-check-label" for="dongshiDistrict">東勢區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="waipuDistrict" value="外埔區">
+            <label class="form-check-label" for="waipuDistrict">外埔區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="xinsheDistrict" value="新社區">
+            <label class="form-check-label" for="xinsheDistrict">新社區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="centralDistrict" value="中區">
+            <label class="form-check-label" for="centralDistrict">中區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="daanDistrict" value="大安區">
+            <label class="form-check-label" for="daanDistrict">大安區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="shigangDistrict" value="石岡區">
+            <label class="form-check-label" for="shigangDistrict">石岡區</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="hepingDistrict" value="和平區">
+            <label class="form-check-label" for="hepingDistrict">和平區</label>
+        </div>
+    </div>
+
+    
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('.form-check-input').forEach((checkbox) => {
+                    console.log(`Binding event to ${checkbox.id}`); // 測試每個 checkbox 是否被綁定
+                    checkbox.addEventListener('change', filterByDistrict);
+                });
+            });
+        </script>
+
+        <script>
+            // 收集被選中的地區，並傳送至後端
+        function filterByDistrict() {
+            const selectedDistricts = [];
+            document.querySelectorAll('.form-check-input:checked').forEach((checkbox) => {
+                selectedDistricts.push(checkbox.value); // 收集選中的地區名稱
+            });
+
+            fetch('/SearchPage/FilterByDistrict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(selectedDistricts) // 傳送選中的地區名稱
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text(); // 接收部分視圖的 HTML
+                })
+                .then(html => {
+                    const container = document.getElementById('searchResultsContainer');
+                    container.innerHTML = html; // 插入部分視圖
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('searchResultsContainer').innerHTML = '<p style="color: red;">篩選失敗，請稍後再試。</p>';
+                });
+        }
+
+        </script>
+
+        <script>
+            //動態更新區塊的函數
+        function updateSearchResults(restaurants) {
+            const container = document.getElementById('searchResultsContainer');
+            if (!container) {
+                console.error('searchResultsContainer not found!');
+                return;
+            }
+
+            container.innerHTML = ''; // 清空現有內容
+
+            if (restaurants.length === 0) {
+                container.innerHTML = '<p>沒有符合條件的餐廳。</p>';
+                return;
+            }
+
+            restaurants.forEach(restaurant => {
+                container.innerHTML += `
+                    <div class="restaurant-item">
+                        <h5>${restaurant.name}</h5> <!-- 使用小寫 "name" -->
+                        <p>${restaurant.address}</p> <!-- 使用小寫 "address" -->
+                    </div>
+                `;
+            });
+
+            console.log('Updated search results container:', container.innerHTML);
+        }
+
+        </script>
+</div>

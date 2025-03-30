@@ -1,0 +1,788 @@
+﻿@using Microsoft.AspNetCore.Html
+@model HomePageViewModel
+@using System.Text.Json
+
+
+
+
+
+<div class="container-fluid mt-0 col-11">
+	<!-- 使內容在頁面中央對齊並自適應寬度
+		 mt-4: Bootstrap 的上方外距，數字 4 表示 1.5rem（大約24px）的間距 -->
+	<!-- 搜尋列 -->
+	<div class="row mb-4">
+		<!-- mb-4: 設置底部外距 -->
+		<div class="col-12">
+			<form method="get" action="/HomePage/Index" id="districtForm">
+				<input type="hidden" name="district" id="districtInput" value="南屯區">
+			</form>
+			@Html.Partial("PartialView/_SearchBar", Model.SearchModel)
+			<!-- 搜尋列放置於頁面頂部 -->
+
+
+		</div>
+	</div>
+</div>
+
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const searchButton = document.getElementById("searchButton");
+
+		if (searchButton) {
+			searchButton.addEventListener("click", function () {
+				const keyword = document.getElementById("searchKeyword").value || "";
+				const date = document.getElementById("searchDate").value || "";
+				const time = document.getElementById("searchTime").value || "";
+				const people = document.getElementById("searchPeople").value || "";
+
+				console.log("搜尋參數：", { keyword, date, time, people });
+
+				// 組裝查詢參數
+				const queryParams = new URLSearchParams({
+					autoSearch: "true",
+					keyword: keyword,
+					date: date,
+					time: time,
+					people: people
+				}).toString();
+
+				// 跳轉到搜尋頁面
+				window.location.href = `/SearchPage/Index?${queryParams}`;
+			});
+		} else {
+			console.error("未找到搜尋按鈕 `searchButton`");
+		}
+	});
+</script>
+
+
+@{
+	// 使用 @Url.Content 生成带有绝对路径的 JSON 数据
+	var restaurantListWithAbsolutePaths = Model.Restaurants?.Select(r => new
+	{
+		r.RestaurantName,
+		r.Description,
+		ImageUrl = Url.Content(r.ImageUrl),  // Generate absolute path for images
+		r.Url,
+		r.RestaurantRating,
+		r.PriceRange,
+		r.RestaurantAddress,
+		r.RestaurantID
+	}).ToList();
+
+	// Generate JSON data with absolute paths for nearby restaurant list
+	var nearbyRestaurantListWithAbsolutePaths = Model.NearbyRestaurants?.Select(r => new
+	{
+		r.RestaurantName,
+		r.Description,
+		ImageUrl = Url.Content(r.ImageUrl), // Convert to absolute URL
+		r.Url,
+		r.RestaurantRating,
+		r.PriceRange,
+		r.RestaurantAddress,
+		r.RestaurantID
+	}).ToList();
+
+	// Generate JSON data with absolute paths for active restaurant list
+	var activeRestaurantListWithAbsolutePaths = Model.ActiveRestaurants?.Select(r => new
+	{
+		r.RestaurantName,
+		r.Description,
+		ImageUrl = Url.Content(r.ImageUrl), // Convert to absolute URL
+		r.Url,
+		r.RestaurantRating,
+		r.PriceRange,
+		r.RestaurantAddress,
+		r.RestaurantID,
+		r.Title,
+		r.Content
+	}).ToList();
+}
+
+<div class="carousel-wrapper">
+	<h3 class="carousel-title  fw-bold" style="width:100%;font-size:30px;">推薦餐廳</h3><br />
+	<div id="carouselExampleControlsNoTouching" class="carousel slide position-relative" data-bs-touch="false" data-bs-interval="false">
+		<div class="carousel-inner" id="carouselInner">
+			<!-- JavaScript 会动态生成轮播内容 -->
+		</div>
+
+		<button class="carousel-control-prev" onclick="scrollCarousel(-1)" type="button">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Previous</span>
+		</button>
+		<button class="carousel-control-next" onclick="scrollCarousel(1)" type="button">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Next</span>
+		</button>
+	</div>
+</div>
+
+
+
+
+<br>
+<br>
+<br>
+
+
+<!-- New Carousel Section for Nearby Restaurants -->
+<div class="carousel-wrapper">
+	<h3 class="carousel-title fw-bold" style="width:100%;font-size:30px ">附近餐廳</h3><br />
+	<div id="carouselExampleControlsNearby" class="carousel slide position-relative" data-bs-touch="false" data-bs-interval="false">
+		<div class="carousel-inner" id="carouselInnerNearby">
+			<!-- JavaScript dynamically generates nearby restaurants carousel content here -->
+		</div>
+
+		<button class="carousel-control-prev" onclick="scrollCarouselNearby(-1)" type="button">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Previous</span>
+		</button>
+		<button class="carousel-control-next" onclick="scrollCarouselNearby(1)" type="button">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Next</span>
+		</button>
+	</div>
+</div>
+
+
+<br>
+<br>
+<br>
+
+
+<div class="carousel-wrapper">
+	<h3 class="carousel-title fw-bold" style="width:100%;font-size:30px;">活動中的餐廳</h3><br />
+	<div id="carouselExampleControlsActive" class="carousel slide position-relative" data-bs-touch="false" data-bs-interval="false">
+		<div class="carousel-inner" id="carouselInnerActive">
+			<!-- JavaScript dynamically generates active restaurants carousel content here -->
+		</div>
+
+		<!-- 按钮绑定 scrollCarouselActive -->
+		<button class="carousel-control-prev" onclick="scrollCarouselActive(-1)" type="button">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Previous</span>
+		</button>
+		<button class="carousel-control-next" onclick="scrollCarouselActive(1)" type="button">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Next</span>
+		</button>
+	</div>
+</div>
+
+
+
+
+
+
+<br>
+<br>
+<br>
+<br>
+<hr>
+<br>
+@* .Take(3).ToList() *@
+
+@* ---------這裡是評論的資料卡 用C#寫 -----------*@
+@{
+	int x = 0;
+}
+<div class="review-cards-wrapper d-flex justify-content-between flex-wrap">
+	<h3 class="carousel-title fw-bold" style="width:100%; margin-bottom:30px;font-size:30px">過往顧客的推薦</h3>
+	@foreach (var review in Model.Reviews)
+	{
+		@if (review.ReviewScore < 5) { continue; }
+		x = x + 1;
+		@if (x > 3) { break; }
+		<div class="review-card card mb-4" onclick='showReviewModal(@Html.Raw(JsonSerializer.Serialize(review)))'>
+			<div class="card-body d-flex flex-column">
+				<!-- Top Content -->
+				<div class="review-top-section">
+					<h5 class="customer-name">@review.CustomerName.Substring(0, 1)＊@review.CustomerName.Substring(review.CustomerName.Length - 1, 1)</h5>
+					<!-- Rating and Date -->
+					<div class="review-score-date d-flex align-items-center mb-2">
+						<div class="review-score">
+							@for (int i = 0; i < review.ReviewScore; i++)
+							{
+								<i class="fa fa-star text-warning"></i>
+							}
+							@for (int i = review.ReviewScore; i < 5; i++)
+							{
+								<i class="fa-regular fa-star text-muted"></i>
+							}
+						</div>
+						<span class="review-date text-muted ms-2">@review.ReviewDate.ToString("yyyy年MMMMdd日到訪")</span>
+					</div>
+					<p class="review-content">@review.ReviewContent</p>
+				</div>
+				<hr />
+				<!-- Bottom Content -->
+				<div class="review-bottom-section"
+					 onclick="window.location.href='/Restaurant/Index/' + @review.RestaurantID">
+					<div class="row">
+						<div class="col-sm-8">
+							<h6 class="restaurant-name mb-1">@review.RestaurantName</h6>
+							<div class="restaurant-details d-flex align-items-center justify-content-between">
+								<span>@GetStarHtml(review.RestaurantRating)</span>
+							</div>
+							<p class="restaurant-address text-muted">@review.RestaurantAddress</p>
+						</div>
+						<div class="col-sm-4 p-0 d-flex" style="margin-top:5px; ">
+							<img src="@review.ImageUrl" style="width:100%;height:100px;object-fit:cover;" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+</div>
+
+
+<!-- Modal Structure -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true" style="justify-content: center;align-content: center;">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<!-- Modal Header: Remove Title, Keep Only Close Button -->
+			<div class="modal-header p-2" style="border-bottom: none;">
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<!-- Modal Body: Move Content Up -->
+			<div class="modal-body pt-0">
+				<h5 class="customer-name" id="modalCustomerName"></h5>
+				<div class="review-score-date d-flex align-items-center mb-2">
+					<div class="review-score" id="modalReviewScore"></div>
+					<span class="review-date text-muted ms-2" id="modalReviewDate"></span>
+				</div>
+				<p class="review-content" id="modalReviewContent" style="word-wrap: break-word;white-space: normal; "></p>
+				<hr />
+				<h5 class="restaurant-name mb-1" id="modalRestaurantName"></h5>
+				<div class="restaurant-details">
+					<span id="modalRestaurantRating"></span>
+				</div>
+				<p class="restaurant-address" id="modalRestaurantAddress"></p>
+				<img src="" id="modalImage" style="width:60%;height:auto;object-fit:cover;max-height:250px" />
+
+				<!-- Add Hyperlink to Bottom Section -->
+				<a href=`/Restaurant/Index/${review.RestaurantID}` id="modalRestaurantLink" style="text-decoration: none; color: inherit; display: block; margin-top: 10px;">
+					<div class="modal-link-content" style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; text-align: center;">
+						立即查看餐廳詳情
+					</div>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+<script>
+	function showReviewModal(review) {
+		// Log the review data for debugging
+		console.log("Review Data:", review);
+
+		// Ensure ReviewScore is valid
+		const reviewScore = parseInt(review.ReviewScore) || 0;
+
+		// Populate modal with review data
+		document.getElementById('modalCustomerName').innerText = review.CustomerName.substring(0, 1) + "＊" + review.CustomerName.substring(review.CustomerName.length - 1,);
+		document.getElementById('modalReviewScore').innerHTML =
+			Array(reviewScore).fill('<i class="fa fa-star text-warning"></i>').join('') +
+			Array(5 - reviewScore).fill('<i class="fa fa-star text-muted"></i>').join('');
+		document.getElementById('modalReviewDate').innerText = review.ReviewDate ?
+			new Date(review.ReviewDate).toLocaleDateString("zh-CN", { year: 'numeric', month: 'long', day: 'numeric' })
+			: "No Date Available";
+		document.getElementById('modalReviewContent').innerText = review.ReviewContent || "No Content";
+		document.getElementById('modalRestaurantName').innerText = review.RestaurantName || "Unknown Restaurant";
+
+		// Add a single gold star and the rating text
+		document.getElementById('modalRestaurantRating').innerHTML =
+			'<i class="fa fa-star text-warning"></i> 評分: ' + (review.RestaurantRating || "No Rating");
+
+		document.getElementById('modalRestaurantAddress').innerText = review.RestaurantAddress || "No Address Provided";
+		document.getElementById('modalImage').src = review.ImageUrl || "default-image-path.jpg"; // Set a default image path
+
+		// Set the link for the restaurant
+		document.getElementById('modalRestaurantLink').href = `/Restaurant/Index/${review.RestaurantID}`;
+
+		// Show the modal
+		var reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'));
+		reviewModal.show();
+	}
+
+
+
+
+
+
+</script>
+<br>
+<br>
+<br>
+<br>
+
+
+
+
+
+@functions {
+	// Helper method to generate star HTML for a given rating
+	private IHtmlContent GetStarHtml(double rating)
+	{
+		var fullStars = (int)Math.Floor(rating);
+		var hasHalfStar = rating % 1 >= 0.5;
+		var emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+		var starsHtml = new HtmlContentBuilder();
+
+		starsHtml.AppendHtml("<i class='fa fa-star text-warning'></i>");
+
+		// Numeric rating beside stars
+		starsHtml.AppendHtml($"<span> 評分: {rating:F1}</span>");
+
+		return starsHtml;
+	}
+}
+
+
+
+@* 餐廳資料卡的樣式----------------------------- *@
+<style>
+
+	.carousel-wrapper {
+		width: 90% !important;
+		margin-left: auto !important;
+		margin-right: auto !important;
+		margin-bottom: -50px !important;
+	}
+
+	#carouselExampleControlsNoTouching, #carouselExampleControlsNearby, #carouselExampleControlsActive {
+		width: 100% !important;
+		height: 380px !important;
+	}
+
+	.carousel-inner {
+		height: 100% !important;
+		opacity: 1;
+		transition: opacity 0.5s ease; /* 设置淡入淡出動畫 */
+	}
+
+
+
+	.carousel-control-prev,
+	.carousel-control-next {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		/*rgba(255, 255, 255, 0.8)*/
+		background-color: black;
+		border-radius: 50%;
+		width: 40px;
+		height: 40px;
+		border: none;
+		z-index: 1;
+	}
+
+
+	.card {
+		border-radius: 15px !important;
+		width: 100% !important;
+		height: 95% !important;
+		margin-top: 10px !important;
+		transition: all 0.3s ease;
+	}
+
+		.card:hover {
+			transform: scale(1.05) !important;
+			box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+		}
+
+	.card-img-top {
+		width: 100% !important;
+		border-radius: 15px 15px 0 0 !important;
+		object-fit: fill !important;
+		min-height: 150px !important;
+		max-height: 150px !important;
+	}
+
+	.time-button:hover {
+		background-color: #C53F0F !important;
+		color: white;
+	}
+
+
+
+	.star-rating {
+		font-size: 1.5rem;
+		color: #d3d3d3; /* 灰色為空星顏色 */
+		position: relative;
+		display: inline-block;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	.star-rating-fill {
+		color: #FFD700; /* 金黃色為滿星顏色 */
+		position: absolute;
+		top: 0;
+		left: 0;
+		overflow: hidden;
+	}
+
+		.star-rating::before,
+		.star-rating-fill::before {
+			content: "★★★★★"; /* 五顆星圖案 */
+		}
+
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+	// 使用絕對路徑的餐廳數據
+
+	const restaurantList = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(restaurantListWithAbsolutePaths));
+	const nearbyRestaurants = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(nearbyRestaurantListWithAbsolutePaths));
+	const activeRestaurants = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(activeRestaurantListWithAbsolutePaths));
+
+	let itemsPerPage = 5; // 默認每頁顯示的卡片數
+	let currentPage = 0;  // 當前頁碼索引
+	let currentPageNearby = 0;
+	let currentPageActive = 0;
+
+	// 製作響應式的部分
+	function updateItemsPerPage() {
+		const screenWidth = window.innerWidth;
+
+		switch (true) {
+			case (screenWidth < 1300 && screenWidth >= 800): itemsPerPage = 4; break;
+			case (screenWidth < 800 && screenWidth >= 576): itemsPerPage = 3; break;
+			case (screenWidth < 576 && screenWidth >= 380): itemsPerPage = 2; break;
+			case (screenWidth < 380): itemsPerPage = 1; break;
+			default: itemsPerPage = 5;
+		}
+		const totalPages = Math.ceil(restaurantList.length / itemsPerPage);
+
+		// 確保 currentPage 不超過新的 totalPages 範圍
+		if (currentPage >= totalPages) {
+			currentPage = totalPages - 1;
+		}
+
+		renderCarousel();
+	}
+
+	function updateItemsPerPageNearby() {
+		const screenWidth = window.innerWidth;
+
+		switch (true) {
+			case (screenWidth < 1300 && screenWidth >= 800): itemsPerPage = 4; break;
+			case (screenWidth < 800 && screenWidth >= 576): itemsPerPage = 3; break;
+			case (screenWidth < 576 && screenWidth >= 380): itemsPerPage = 2; break;
+			case (screenWidth < 380): itemsPerPage = 1; break;
+			default: itemsPerPage = 5;
+		}
+		const totalPages = Math.ceil(nearbyRestaurants.length / itemsPerPage);
+
+		if (currentPageNearby >= totalPages) {
+			currentPageNearby = totalPages - 1;
+		}
+
+		renderCarouselNearby();
+	}
+
+
+	function updateItemsPerPageActive() {
+		const screenWidth = window.innerWidth;
+
+		switch (true) {
+			case (screenWidth < 1300 && screenWidth >= 800): itemsPerPage = 4; break;
+			case (screenWidth < 800 && screenWidth >= 576): itemsPerPage = 3; break;
+			case (screenWidth < 576 && screenWidth >= 380): itemsPerPage = 2; break;
+			case (screenWidth < 380): itemsPerPage = 1; break;
+			default: itemsPerPage = 5;
+		}
+		const totalPages = Math.ceil(activeRestaurants.length / itemsPerPage);
+
+		if (currentPageActive >= totalPages) {
+			currentPageActive = totalPages - 1;
+		}
+
+		renderCarouselActive();
+	}
+
+
+	// 動態渲染輪播內容
+	function renderCarouselCore(context, carouselId, restaurants, currentPage) {
+		const carouselInner = document.getElementById(carouselId);
+		const prevButton = document.querySelector(`#${carouselId} ~ .carousel-control-prev`);
+		const nextButton = document.querySelector(`#${carouselId} ~ .carousel-control-next`);
+
+		// 清空內容
+		carouselInner.innerHTML = '';
+
+		// 檢查資料卡數量，小於或等於 itemsPerPage 時隱藏按鈕
+		if (restaurants.length <= itemsPerPage) {
+			if (prevButton) prevButton.style.display = 'none';
+			if (nextButton) nextButton.style.display = 'none';
+		} else {
+			if (prevButton) prevButton.style.display = 'block';
+			if (nextButton) nextButton.style.display = 'block';
+		}
+
+		// 計算分頁
+		const totalPages = Math.ceil(restaurants.length / itemsPerPage);
+		const startIndex = currentPage * itemsPerPage;
+		const endIndex = Math.min(startIndex + itemsPerPage, restaurants.length);
+		const pageItems = restaurants.slice(startIndex, endIndex);
+
+		let pageHtml = `<div class="carousel-item active"><div class="row justify-content-center">`;
+
+		// 渲染每個卡片
+		pageItems.forEach((restaurant, index) => {
+			const uniqueIndex = `${context}_${index}`;
+			pageHtml += `
+						<div class="col" style="flex: 0 0 ${100 / itemsPerPage}%; max-width: ${100 / itemsPerPage}%; height: 100%;">
+							<div class="card h-100" style="cursor: pointer;" onclick="submitFormIfNoButton(event, 'hiddenForm_${uniqueIndex}')">
+								<img src="${restaurant.ImageUrl}" class="card-img-top" alt="${restaurant.RestaurantName}">
+								<div class="card-body">
+								<h3 class="card-title text-nowrap fw-bold   overflow-hidden text-truncate ">${restaurant.RestaurantName}</h3>
+									${getStarHtml(restaurant.RestaurantRating)}
+									<p style="margin-bottom:0 !important">${getPrice(restaurant.PriceRange)}．${getAdd(restaurant.RestaurantAddress)}</p>
+									<p class="text-nowrap overflow-hidden fw-bold text-truncate">${restaurant.Description}</p>
+									<div class="time-buttons mt-2 d-flex justify-content-between" style="width: 100%;">
+										<form id="timeForm_${uniqueIndex}" method="GET" action="/Booking/BookingPage/${restaurant.RestaurantID}" style="display: none;">
+											<input type="hidden" name="time" id="selectedTime_${uniqueIndex}">
+											<input type="hidden" name="restaurantName" id="selectedRestaurant_${uniqueIndex}" value="${restaurant.RestaurantName}">
+										</form>
+										${generateTimeButtons(context, restaurant.RestaurantName, index)}
+									</div>
+								</div>
+							</div>
+						</div>
+						<form id="hiddenForm_${uniqueIndex}" method="POST" action="/Restaurant/Index/${restaurant.RestaurantID}" style="display:none;">
+							<input type="hidden" name="restaurantName" value="${restaurant.RestaurantID}">
+						</form>`;
+		});
+
+		pageHtml += `</div></div>`;
+		carouselInner.innerHTML = pageHtml;
+	}
+
+
+	function submitFormIfNoButton(event, formId) {
+		// 如果點擊的不是 .time-buttons 內的元素，則提交表單
+		if (!event.target.closest('.time-buttons')) {
+			document.getElementById(formId).submit();
+		}
+	}
+
+	function renderCarouselNearby() {
+		renderCarouselCore('nearby', 'carouselInnerNearby', nearbyRestaurants, currentPageNearby);
+	}
+
+	function renderCarouselActive() {
+		renderCarouselCore('active', 'carouselInnerActive', activeRestaurants, currentPageActive);
+	}
+
+	function renderCarousel() {
+		renderCarouselCore('general', 'carouselInner', restaurantList, currentPage);
+	}
+
+
+	//星星的函式
+	function getStarHtml(ratings) {
+		let starsHtml = '';
+		let level = ratings / 5 * 100;
+		starsHtml += `<div class="star-rating" style="height:26px"><div class="star-rating-fill" style="width:${level}%" ></div></div><i> ${ratings}</i>`;
+		return starsHtml;
+	}
+
+
+
+	//錢符號與地區函示
+	function getPrice(price) {
+		let priceHtml = '';
+		switch (true) {
+			case (price > 1500):
+				priceHtml += '<i>$$$$</i>';
+				break;
+			case (price <= 1500 && price > 1000):
+				priceHtml += '<i>$$$</i>';
+				priceHtml += '<i class="text-black-50">$</i>';
+				break;
+			case (price <= 1000 && price > 500):
+				priceHtml += '<i>$$</i>';
+				priceHtml += '<i class="text-black-50">$$</i>';
+				break;
+			default:
+				priceHtml += '<i>$</i>';
+				priceHtml += '<i class="text-black-50">$$$</i>';
+		}
+		return priceHtml;
+	}
+
+
+	@* //由於只有台中 僅用市與區來作劃分 *@
+		function getAdd(add) {
+			let addHtml = '';
+			const addStart = add.indexOf("市") + 1;
+			const addEnd = add.indexOf("區") + 1;
+			let addDistrict = add.substring(addStart, addEnd);
+			addHtml += `<i>${addDistrict}</i>`;
+			return addHtml;
+
+		}
+
+
+	@* 產生時間按鈕 *@
+		function generateTimeButtons(context, restaurantName, index) {
+			const now = new Date();
+			const elevenTwentyPM = new Date();
+			elevenTwentyPM.setHours(23, 20, 0, 0);
+			const tenThirtyAM = new Date();
+			tenThirtyAM.setHours(10, 30, 0, 0);
+
+			if (now > elevenTwentyPM || now < tenThirtyAM) {
+				now.setHours(10, 30, 0, 0);
+			} else {
+				if (now.getMinutes() < 21) {
+					now.setMinutes(0, 0, 0);
+				} else if (now.getMinutes() >= 21 && now.getMinutes() < 50) {
+					now.setMinutes(30, 0, 0);
+				} else {
+					now.setMinutes(60, 0, 0);
+				}
+			}
+
+			const formatTime = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+			const Time24Hour = (date) =>
+				date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+
+			const leftTime = new Date(now.getTime() + 0.5 * 60 * 60 * 1000);
+			const middleTime = new Date(now.getTime() + 1 * 60 * 60 * 1000);
+			const rightTime = new Date(now.getTime() + 1.5 * 60 * 60 * 1000);
+
+			const buttonStyle = 'background-color: #D25823; color: white; border: none; width: 32%; font-size: clamp(10px, 1vw, 12px); white-space: nowrap; height: 35px; border-radius: 5px; font-weight: bold;';
+
+			return `
+					<button type="button" class="time-button" style="${buttonStyle}"
+						onclick="setTimeAndSubmit('${context}', '${Time24Hour(leftTime)}', '${restaurantName}', ${index})">
+						${formatTime(leftTime)}
+					</button>
+					<button type="button" class="time-button" style="${buttonStyle}"
+						onclick="setTimeAndSubmit('${context}', '${Time24Hour(middleTime)}', '${restaurantName}', ${index})">
+						${formatTime(middleTime)}
+					</button>
+					<button type="button" class="time-button" style="${buttonStyle}"
+						onclick="setTimeAndSubmit('${context}', '${Time24Hour(rightTime)}', '${restaurantName}', ${index})">
+						${formatTime(rightTime)}
+					</button>
+				`;
+		}
+
+
+	@* 將所按的時間值傳出 *@
+		function setTimeAndSubmit(context, time, restaurantName, index) {
+			const uniqueIndex = `${context}_${index}`;
+			// 設置隱藏輸入的值
+			document.getElementById(`selectedTime_${uniqueIndex}`).value = time;
+			document.getElementById(`selectedRestaurant_${uniqueIndex}`).value = restaurantName;
+
+			// 提交表單
+			document.getElementById(`timeForm_${uniqueIndex}`).submit();
+		}
+
+	@*  // 切換頁面動態效果 *@
+		function scrollCarousel(direction) {
+			const carouselInner = document.getElementById("carouselInner");
+
+			// 淡出效果
+			carouselInner.style.transition = "opacity 0.5s ease";
+			carouselInner.style.opacity = 0;
+
+			@* // 等待淡出完成后切换内容 *@
+				setTimeout(() => {
+					const totalPages = Math.ceil(restaurantList.length / itemsPerPage);
+					currentPage = (currentPage + direction + totalPages) % totalPages; // 循环滚动
+
+					// 確保 currentPage 在總頁數範圍內
+					if (currentPage >= totalPages) {
+						currentPage = totalPages - 1;
+					}
+
+					renderCarousel();  // 重新渲染當前頁面內容
+
+					// 淡入效果
+					carouselInner.style.transition = "opacity 0.5s ease";
+					carouselInner.style.opacity = 1;
+				}, 500); // 延遲時間應與過渡時間匹配
+		}
+
+	function scrollCarouselNearby(direction) {
+		const carouselInnerNearby = document.getElementById("carouselInnerNearby");
+
+		carouselInnerNearby.style.transition = "opacity 0.5s ease";
+		carouselInnerNearby.style.opacity = 0;
+
+		setTimeout(() => {
+			const totalPages = Math.ceil(nearbyRestaurants.length / itemsPerPage);
+			currentPageNearby = (currentPageNearby + direction + totalPages) % totalPages;
+
+			if (currentPageNearby >= totalPages) {
+				currentPageNearby = totalPages - 1;
+			}
+
+			renderCarouselNearby();
+
+			carouselInnerNearby.style.transition = "opacity 0.5s ease";
+			carouselInnerNearby.style.opacity = 1;
+		}, 500);
+	}
+	function scrollCarouselActive(direction) {
+		const carouselInnerActive = document.getElementById("carouselInnerActive");
+
+		// 淡出效果
+		carouselInnerActive.style.transition = "opacity 0.5s ease";
+		carouselInnerActive.style.opacity = 0;
+
+		// 等待淡出完成後切換内容
+		setTimeout(() => {
+			const totalPages = Math.ceil(activeRestaurants.length / itemsPerPage);
+			currentPageActive = (currentPageActive + direction + totalPages) % totalPages;
+
+			if (currentPageActive >= totalPages) {
+				currentPageActive = totalPages - 1;
+			}
+
+			// 重新渲染当当前页面内容
+			renderCarouselActive();
+
+			// 淡入效果
+			carouselInnerActive.style.transition = "opacity 0.5s ease";
+			carouselInnerActive.style.opacity = 1;
+		}, 500); // 延迟时间应与过渡时间匹配
+	}
+
+
+
+	@* // 初始化和調整窗口大小重新渲染 *@
+		window.addEventListener("load", updateItemsPerPage);
+	window.addEventListener("resize", updateItemsPerPage);
+
+	window.addEventListener("load", updateItemsPerPageNearby);
+	window.addEventListener("resize", updateItemsPerPageNearby);
+
+	window.addEventListener("load", updateItemsPerPageActive);
+	window.addEventListener("resize", updateItemsPerPageActive);
+</script>

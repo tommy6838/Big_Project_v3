@@ -1,0 +1,98 @@
+﻿.review-cards-wrapper {
+    width: 90%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    min-height: 450px;
+}
+
+.review-card {
+    flex: 1 1 30%;
+    max-width: 32%;
+    min-width: 290px;
+    height: 380px !important;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+    .review-card .card-body {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 20px;
+    }
+
+.review-top-section {
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.review-bottom-section {
+}
+
+/*評論資料卡彈出的視窗最下面*/
+.modal-link-content:hover {
+    background-color: #C53F0F;
+    color: white;
+}
+
+
+.review-card hr {
+    border-top: 2px solid #aaa;
+    margin: 0;
+    transition: all 0.3s ease;
+}
+
+
+.review-card:hover hr {
+    border-top: 3px solid #333;
+}
+
+
+.customer-name {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.review-score i {
+    font-size: 1.25rem;
+    margin-right: 2px;
+    white-space: nowrap;
+}
+
+.review-content {
+    font-size: 1.25rem;
+    margin-top: 10px;
+}
+
+.review-date {
+    font-size: 1.25rem;
+}
+
+.restaurant-name {
+    font-weight: bold;
+    color: #333;
+    margin-top: 1rem;
+    font-size: 1.5rem;
+}
+
+.restaurant-details {
+    font-size: 1.05rem;
+    color: #666;
+}
+
+.price-range {
+    font-weight: bold;
+}
+
+.restaurant-address {
+    font-size: 1.05rem;
+    white-space: nowrap;
+    overflow: hidden;
+}

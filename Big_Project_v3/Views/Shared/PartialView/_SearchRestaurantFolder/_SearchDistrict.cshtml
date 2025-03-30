@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Big_Project_v3.ViewModels.LocationViewModel>
+
+<div class="bg-white p-3 rounded">
+    <div>
+        @foreach (var restaurant in Model)
+        {
+            <a href="@Url.Action("Index", "Restaurant", new { id = restaurant.Id })" class="text-decoration-none text-dark">
+                <div class="restaurant-item d-flex mb-3">
+                    <!-- 使用動態 PhotoURL -->
+                    <img src="@(restaurant.PhotoURL ?? Url.Content("~/img/輕井澤-封面.jpg"))" alt="Restaurant Image" class="img-thumbnail me-3" style="width: 200px; height: 200px;">
+
+                    <div>
+                        <h3 class="fw-bolder text-black-50">@restaurant.Name</h3>
+
+                        <!-- 判斷餐廳是否接受訂單 -->
+                        @if (!restaurant.IsReservationOpen)
+                        {
+                            <h5 class="fw-bolder text-danger">此餐廳暫時無法接受訂單。</h5>
+                        }
+
+                        <div style="display: flex; align-items: center;">
+                            @await Html.PartialAsync("PartialView/_SearchRestaurantFolder/StarRating_CSS", restaurant.AverageRating)
+                            <strong style="margin-left: 5px;">@restaurant.AverageRating</strong>
+                        </div>                        
+                        <br />
+                        <p>@restaurant.Description</p>
+                        <p>@restaurant.Address</p>
+                    </div>
+                </div>
+                <hr />
+            </a>
+        }
+    </div>
+</div>

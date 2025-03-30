@@ -5,6 +5,16 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Big_Project_v3", "Big_Project_v3\Big_Project_v3.csproj", "{0ED85719-570C-4A07-B585-876C95871B81}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTable_V2", "..\小夥伴\iTable_小夥伴2號\iTable_V2\iTable_V2\iTable_V2.csproj", "{27AD6DA4-0605-4D2C-A820-2EC211242575}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "restaurant", "..\小夥伴\restaurant-子欣\restaurant\restaurant\restaurant.csproj", "{BFD01315-F940-4414-8BAA-85CF8E9AA327}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Big_Project_v3-晟宇", "..\小夥伴\Big_Project_v3-晟宇\Big_Project_v3\Big_Project_v3\Big_Project_v3-晟宇.csproj", "{9C6EABAF-138C-44D6-961D-B58B825AB44B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "demo_1-國廷1126", "..\小夥伴\demo_1_國廷1126\demo_1\demo_1-國廷1126.csproj", "{74527F37-EE9D-49F6-ABD5-8C4DFB1180B4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "itable_1-國廷1128", "..\小夥伴\itable_1_國廷1128\itable_1\itable_1\itable_1-國廷1128.csproj", "{331E9112-AF18-4467-87E2-FA5214A67C02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +25,26 @@ Global
 		{0ED85719-570C-4A07-B585-876C95871B81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0ED85719-570C-4A07-B585-876C95871B81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0ED85719-570C-4A07-B585-876C95871B81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27AD6DA4-0605-4D2C-A820-2EC211242575}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27AD6DA4-0605-4D2C-A820-2EC211242575}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27AD6DA4-0605-4D2C-A820-2EC211242575}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27AD6DA4-0605-4D2C-A820-2EC211242575}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFD01315-F940-4414-8BAA-85CF8E9AA327}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFD01315-F940-4414-8BAA-85CF8E9AA327}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFD01315-F940-4414-8BAA-85CF8E9AA327}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFD01315-F940-4414-8BAA-85CF8E9AA327}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C6EABAF-138C-44D6-961D-B58B825AB44B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C6EABAF-138C-44D6-961D-B58B825AB44B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C6EABAF-138C-44D6-961D-B58B825AB44B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C6EABAF-138C-44D6-961D-B58B825AB44B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74527F37-EE9D-49F6-ABD5-8C4DFB1180B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74527F37-EE9D-49F6-ABD5-8C4DFB1180B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74527F37-EE9D-49F6-ABD5-8C4DFB1180B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74527F37-EE9D-49F6-ABD5-8C4DFB1180B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{331E9112-AF18-4467-87E2-FA5214A67C02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{331E9112-AF18-4467-87E2-FA5214A67C02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{331E9112-AF18-4467-87E2-FA5214A67C02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{331E9112-AF18-4467-87E2-FA5214A67C02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

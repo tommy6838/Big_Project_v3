@@ -1,0 +1,477 @@
+﻿@model IEnumerable<Big_Project_v3.Models.Reservation>
+
+@{
+	ViewData["Title"] = "Booking";
+}
+
+<h1>預定管理</h1>
+
+@* ----------------------功能鍵---------------------- *@
+<div class="">
+	<nav class="navbar">
+		<div class="container-fluid">
+
+			@* 先暫定都是餐廳1, 記得修成登入餐廳!! *@
+			<div class="">
+				@* <div class="d-flex align-items-center me-2  ms-auto"> 這個會跑位*@
+				<div class="">
+					<button id="btn_opcl" type="button" class="btn" data-restaurant-id="1"
+							data-bs-toggle="button" aria-pressed="false" autocomplete="off">
+						<!-- 文字和狀態去找script! -->
+					</button>
+				</div>
+			</div>
+
+
+			<div class="d-flex align-items-center me-2  ms-auto">
+
+				<button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#NNN">取消更變</button>
+			</div>
+
+			<div class="d-flex align-items-center me-6 float-end">
+
+				<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#YYY">確認更變</button>
+			</div>
+			@* GPT排版-----------------------------------------------------------------------
+			<div class="btn-group" role="group" aria-label="Basic example">
+			<button type="button" class="btn btn-outline-danger">取消更變</button>
+			<button type="button" class="btn btn-outline-primary">確認更變</button>
+			</div>
+			------------------------------------------------------------------------------- *@
+
+		</div>
+	</nav>
+</div>
+
+@* ----------------------表單--------------------- *@
+
+<div class="container-fluid my-4" id="mainContainer">
+
+	<!-- 使用 70vh 讓高度也變得動態 -->
+	<div class="card-body d-flex align-items-center justify-content-center" style="height: 100%;">
+		<!-- 這裡是大格子的內容區域 -->
+		<div id="contentArea" class="w-100 h-100 border border-secondary d-flex align-items-center justify-content-center" style="border: 1px dashed #aaa;">
+			<div class="table-responsive">
+				<table class="table table-bordered table-hover text-center align-middle">
+					<thead>
+						<tr>
+							@* class="fs-5" *@
+							<th>@Html.DisplayNameFor(model => model.ReservationId)</th>
+							<th style=" min-width: 100px;">@Html.DisplayNameFor(model => model.BookerName)</th>
+							<th style="min-width: 150px;">@Html.DisplayNameFor(model => model.BookerPhone)</th>
+							<td style="min-width: 200px;">@Html.DisplayNameFor(model => model.BookerEmail)</td>
+							<th>@Html.DisplayNameFor(model => model.NumAdults)</th>
+							<th>@Html.DisplayNameFor(model => model.NumChildren)</th>
+							<th style="min-width: 150px;">@Html.DisplayNameFor(model => model.ReservationDate)</th>
+							<th style="min-width: 100px;">@Html.DisplayNameFor(model => model.ReservationTime)</th>
+							<th style="min-width: 100px;">@Html.DisplayNameFor(model => model.CreatedAt)</th>
+							<th style="min-width: 200px;">@Html.DisplayNameFor(model => model.SpecialRequests)</th>
+							<th style="min-width: 120px;">@Html.DisplayNameFor(model => model.ReservationStatus)</th>
+							<th style="min-width: 100px;">編輯</th>
+						</tr>
+
+					</thead>
+
+					<tbody>
+
+						@foreach (var item in Model)
+						{
+							<tr id="row-@item.ReservationId">
+								<td class="no-edit">@Html.DisplayFor(modelItem => item.ReservationId)</td>
+								<input type="hidden" name="ReservationId" value="@item.ReservationId" />
+								<input type="hidden" name="RestaurantId" value="@item.RestaurantId" />
+								<input type="hidden" name="UserId" value="@item.UserId" />
+								<input type="hidden" name="UpdatedAt" value="@item.UpdatedAt" />
+
+								<td class="fs-5" data-name="BookerName">@Html.DisplayFor(modelItem => item.BookerName)</td>
+								<td data-name="BookerPhone">@Html.DisplayFor(modelItem => item.BookerPhone)</td>
+								<td data-name="BookerEmail">@Html.DisplayFor(modelItem => item.BookerEmail)</td>
+								<td data-name="NumAdults">@Html.DisplayFor(modelItem => item.NumAdults)</td>
+								<td data-name="NumChildren">@Html.DisplayFor(modelItem => item.NumChildren)</td>
+
+								<td data-name="ReservationDate">@Html.DisplayFor(modelItem => item.ReservationDate)</td>
+								<td data-name="ReservationTime">@item.ReservationTime?.ToString("HH:mm")</td>
+
+								<td class="no-edit">@Html.DisplayFor(modelItem => item.CreatedAt)</td>
+								<td data-name="SpecialRequests">@Html.DisplayFor(modelItem => item.SpecialRequests)</td>
+								<td class="status-cell" data-name="ReservationStatus">@Html.DisplayFor(modelItem => item.ReservationStatus)</td>
+
+								<td>
+									<a href="javascript:void(0);" class="btn btn-primary edit-button" data-row-id="@item.ReservationId">Edit</a>
+								</td>
+							</tr>
+						}
+
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+@* ---------------------------------modal------------------------------------ *@
+
+<!-- 取消框 -->
+<div class="modal fade" id="NNN">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">要放棄修改嗎?</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">放棄取消</button>
+				<button type="button" class="btn btn-primary" onclick="location.reload();">堅持取消</button>
+				@* 取消暫時先跳回來 *@
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- 確認框 -->
+<div class="modal fade" id="YYY">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">確定要更變了嗎?</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">返回修改</button>
+				<button type="button" class="btn btn-primary" onclick="confirmChanges()">確認更變</button>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+@* ------------------------script ---------------------------*@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+	$(document).ready(function () {
+		// 根據初始狀態來設置按鈕顏色和文本
+		var isReservationOpen = '@ViewBag.IsReservationOpen' === 'True'; // 判斷是否開放訂位
+
+		var $btn = $("#btn_opcl");
+
+		if (isReservationOpen) {
+			$btn.addClass("btn-primary");
+			$btn.text("開放訂位中");
+			$btn.attr("aria-pressed", "true");
+		} else {
+			$btn.addClass("btn-danger");
+			$btn.text("已關閉訂位");
+			$btn.attr("aria-pressed", "false");
+		}
+
+		// 點擊按鈕後變更狀態
+		$btn.click(function () {
+			$(this).toggleClass("btn-primary btn-danger");
+
+			// 更新按鈕的文本
+			if ($(this).hasClass("btn-danger")) {
+				$(this).text("已關閉訂位");
+				$(this).attr("aria-pressed", "false");
+			} else {
+				$(this).text("開放訂位中");
+				$(this).attr("aria-pressed", "true");
+			}
+
+			// 確定要將更改狀態傳送到後端
+			let restaurantId = $(this).data("restaurant-id");
+			let isOpen = $(this).hasClass("btn-primary") ? 1 : 0;
+
+			// 發送 AJAX 請求到後端更新餐廳狀態
+			$.ajax({
+				url: "/Backstage/ToggleReservationStatus", // 控制器動作的 URL
+				type: "POST",
+				contentType: "application/json",
+				data: JSON.stringify({ restaurantId: restaurantId, isReservationOpen: isOpen }),
+				success: function (response) {
+					console.log("狀態更新成功");
+				},
+				error: function (err) {
+					alert("發生錯誤，無法更新訂位狀態");
+				}
+			});
+		});
+	});
+</script>
+
+
+@* <script>
+	//訂單鎖顏色
+	$(document).ready(function () {
+		// 變色
+		$("#btn_opcl").click(function () {
+
+			$(this).toggleClass("btn-primary btn-danger");
+			$(this).toggleClass("active");
+
+			//console.log($(this).attr("class"));
+
+			//變字
+			$(this).hasClass("btn-danger") ? $(this).text("已關閉訂位") : $(this).text("開放訂位中");
+
+			//列表特效
+
+
+	})
+</script> *@
+
+
+
+@* 編輯 *@
+
+<script>
+	$(document).ready(function () {
+		// 當點擊"Edit"按鈕時，啟用編輯狀態
+		$('.edit-button').click(function () {
+			var rowId = $(this).data('row-id'); // 取得被點擊按鈕的行ID
+
+			// console.log("被點擊的行 ID:", rowId);
+
+			var row = $('#row-' + rowId); // 找到對應的<tr>行
+
+
+			// 針對每個<td>進行處理，將需要編輯的部分變成<input>框或下拉選單
+			row.find('td').each(function () {
+				var td = $(this);
+				var text = td.text();
+
+				// 排除含有「編輯」按鈕的單元格，以及不想讓人編輯的欄位
+				if (!td.hasClass('action-cell') && !td.children().is('a') && !td.hasClass('no-edit')) {
+					// 如果這個欄位是 ReservationStatus，改為下拉選單
+					if (td.hasClass('status-cell')) {
+						var select = $('<select>', {
+							class: 'form-select edit-select',
+							name: td.data('name')
+						});
+						//店家能不能選擇未確認?
+						// 添加選項
+						select.append('<option value="未確認"' + (text === '未確認' ? ' selected' : '') + '>未確認</option>');
+						select.append('<option value="已確認"' + (text === '已確認' ? ' selected' : '') + '>已確認</option>');
+						select.append('<option value="已確認"' + (text === '已確認' ? ' selected' : '') + '>已完成</option>');
+						select.append('<option value="已取消"' + (text === '已取消' ? ' selected' : '') + '>已取消</option>');
+						td.html(select);
+					} else {
+
+
+						// 其他欄位改為輸入框
+						var input = $('<input>', {
+							type: 'text',
+							value: text,
+							class: 'form-control edit-input',
+							name: td.data('name') // 確保這裡設置正確的 name
+						});
+
+						// 如果這個欄位是 ReservationDate，添加 placeholder 提示
+						if (td.data('name') === "ReservationDate") {
+							input.attr('placeholder', 'YYYY/MM/DD'); // 添加提示信息
+						}
+
+						// 如果這個欄位是 ReservationTime，添加 placeholder 提示
+						if (td.data('name') === "ReservationTime") {
+							input.attr('placeholder', 'HH:MM'); // 添加提示信息
+						}
+						td.html(input);
+					}
+				}
+			});
+
+			// 讓"Edit"按鈕變成"編輯中"
+			$(this).text('編輯中').prop('disabled', true);
+		});
+	});
+</script>
+
+
+<script>
+	// 格式化日期為 yyyy-MM-dd 格式
+	function formatDate(dateString) {
+		if (!dateString) return null;
+
+		let date = new Date(dateString);
+		let year = date.getFullYear();
+		let month = ('0' + (date.getMonth() + 1)).slice(-2);
+		let day = ('0' + date.getDate()).slice(-2);
+
+		return `${year}-${month}-${day}`; // yyyy-MM-dd
+	}
+
+	// 格式化時間為 HH:mm:ss 格式
+	function formatTime(timeString) {
+		if (!timeString) return null;
+
+		let [hours, minutes] = timeString.split(':');
+		hours = hours.padStart(2, '0');
+		minutes = minutes.padStart(2, '0');
+
+		return `${hours}:${minutes}:00`; // HH:mm:ss
+	}
+
+	// 定義 confirmChanges 函數來處理編輯後的數據，移到全局作用域
+	function confirmChanges() {
+
+		$('input.edit-input, select.edit-select').each(function () {
+			console.log($(this).attr('name'), $(this).val());
+		});
+
+		let updatedRows = [];
+
+		$('tr').each(function () {
+			// if ($(this).find('input, select').length > 0) {
+			//別開這個
+			if ($(this).find('input.edit-input, select.edit-select').length > 0) {
+				let rowId = $(this).attr('id').replace('row-', '');
+
+				// console.log(rowId);
+				// console.log($('#row-' + rowId).find('input[name="BookerName"]'));
+
+				let rowData = {
+					ReservationId: rowId,
+					BookerName: $(this).find('input[name="BookerName"]').val(),
+					// BookerName: row.find('input[name="BookerName"]').val(),
+					BookerPhone: $(this).find('input[name="BookerPhone"]').val() || null,
+					BookerEmail: $(this).find('input[name="BookerEmail"]').val() || null,
+					NumAdults: parseInt($(this).find('input[name="NumAdults"]').val()) || 0,
+					NumChildren: parseInt($(this).find('input[name="NumChildren"]').val()) || 0,
+					ReservationDate: formatDate($(this).find('input[name="ReservationDate"]').val()),
+					ReservationTime: formatTime($(this).find('input[name="ReservationTime"]').val()),
+					SpecialRequests: $(this).find('input[name="SpecialRequests"]').val() || null,
+					ReservationStatus: $(this).find('select[name="ReservationStatus"]').val() || null,
+					RestaurantId: $(this).find('input[name="RestaurantId"]').val(),
+					UserId: $(this).find('input[name="UserId"]').val(),
+					CreatedAt: $(this).find('input[name="CreatedAt"]').val(),
+					UpdatedAt: new Date().toISOString() // 更新資料的時間
+				};
+				updatedRows.push(rowData);
+				console.log("收集到的資料：", rowData);
+			}
+		});
+
+
+
+		$.ajax({
+			url: "/Backstage/UpdateReservations",
+			type: "POST",
+			contentType: "application/json",
+			data: JSON.stringify(updatedRows),
+			success: function (response) {
+				// 成功後刷新頁面
+				location.reload();
+			},
+			error: function (err) {
+				// 處理錯誤的情況
+				alert("發生錯誤，請稍後再試");
+			}
+		});
+	}
+</script>
+
+@* <script>
+	$(document).ready(function () {
+		// 當點擊"Edit"按鈕時，啟用編輯狀態
+		$('.edit-button').click(function () {
+			var rowId = $(this).data('row-id'); // 取得被點擊按鈕的行ID
+			var row = $('#row-' + rowId); // 找到對應的<tr>行
+
+			// 針對每個<td>進行處理，將需要編輯的部分變成<input>框或下拉選單
+			row.find('td').each(function () {
+				var td = $(this);
+				var text = td.text();
+
+				// 排除含有「編輯」按鈕的單元格，以及不想讓人編輯的欄位
+				if (!td.hasClass('action-cell') && !td.children().is('a') && !td.hasClass('no-edit')) {
+					// 如果這個欄位是 ReservationStatus，改為下拉選單
+					if (td.hasClass('status-cell')) {
+						var select = $('<select>', {
+							class: 'form-select edit-select'
+						});
+						// 添加選項
+						select.append('<option value="已確認"' + (text === '已確認' ? ' selected' : '') + '>已確認</option>');
+						select.append('<option value="未確認"' + (text === '未確認' ? ' selected' : '') + '>未確認</option>');
+						select.append('<option value="已取消"' + (text === '已取消' ? ' selected' : '') + '>已取消</option>');
+						td.html(select);
+					} else {
+						// 其他欄位改為輸入框
+						var input = $('<input>', {
+							type: 'text',
+							value: text,
+							class: 'form-control edit-input'
+						});
+						td.html(input);
+					}
+				}
+			});
+
+			// 讓"Edit"按鈕變成"編輯中"
+			$(this).text('編輯中').prop('disabled', true);
+		});
+
+		// 為確認按鈕綁定點擊事件，當點擊確認更變按鈕時，調用 confirmChanges 函數
+		$('#confirmChangesButton').click(function () {
+			confirmChanges();
+		});
+
+		// 定義 confirmChanges 函數來處理編輯後的數據
+		function confirmChanges() {
+			// 準備要提交的資料
+			let updatedRows = [];
+
+			// 收集所有編輯過的行的數據
+			$('tr').each(function () {
+				// 只收集有輸入框或下拉選單的行，這些行應該就是被編輯過的行
+				if ($(this).find('input, select').length > 0) {
+					let rowId = $(this).attr('id').replace('row-', ''); // 獲取行 ID
+					let rowData = {
+						ReservationId: rowId, // ReservationId 不可編輯，直接從行 ID 獲取
+						BookerName: $(this).find('input.edit-input:eq(0)').val(),
+						BookerPhone: $(this).find('input.edit-input:eq(1)').val(),
+						NumAdults: $(this).find('input.edit-input:eq(2)').val(),
+						NumChildren: $(this).find('input.edit-input:eq(3)').val(),
+						ReservationDate: $(this).find('input.edit-input:eq(4)').val(),
+						ReservationTime: $(this).find('input.edit-input:eq(5)').val(),
+						SpecialRequests: $(this).find('input.edit-input:eq(6)').val(),
+						ReservationStatus: $(this).find('select.edit-select').val() // 獲取下拉選單的值
+					};
+					updatedRows.push(rowData);
+				}
+			});
+
+			// 通過 AJAX 提交這些更新後的資料到後端控制器
+			$.ajax({
+				url: "/Backstage/UpdateReservations",
+				type: "POST",
+				contentType: "application/json",
+				data: JSON.stringify(updatedRows),
+				success: function (response) {
+					// 成功後刷新頁面
+					location.reload();
+				},
+				error: function (err) {
+					// 處理錯誤的情況
+					alert("發生錯誤，請稍後再試");
+				}
+			});
+		}
+	});
+</script> *@
+

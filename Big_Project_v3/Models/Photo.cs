@@ -33,7 +33,9 @@ public partial class Photo
     /// <summary>
     /// 相片上傳時間（前台 + 後台）。此欄位記錄相片的上傳時間，用於管理和排序相片。
     /// </summary>
-    public DateTime UploadedAt { get; set; }
+    public DateTime? UploadedAt { get; set; }
+
+    public string? ImagePath { get; set; }
 
     public virtual Restaurant? Restaurant { get; set; }
 }

@@ -48,12 +48,12 @@ public partial class ReservationControlSetting
     /// <summary>
     /// 設定建立時間。此欄位記錄訂位控管設定紀錄的建立時間，用於審計和管理。
     /// </summary>
-    public DateTime CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     /// <summary>
     /// 設定更新時間。此欄位記錄訂位控管設定紀錄的最後更新時間，用於追蹤資料變更歷史。
     /// </summary>
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     public virtual Restaurant? Restaurant { get; set; }
 }

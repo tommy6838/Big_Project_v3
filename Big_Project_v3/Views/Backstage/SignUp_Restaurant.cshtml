@@ -1,0 +1,66 @@
+﻿@model Big_Project_v3.Models.Restaurant
+
+@{
+    ViewData["Title"] = "SignUp_Restaurant";
+    Layout = null;
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Big_Project_v3</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Big_Project_v3.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+    <div>
+        <div class="d-flex justify-content-center mt-5 mb-3">
+            <a href="/Backstage/Home">
+                <img src="~/img/new_logo.png" alt="Logo" style="width:250px;">
+            </a>
+        </div>
+        <div class="d-flex justify-content-center mb-2">
+            <h2>填寫店名及地址</h2>
+        </div>
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-4">
+                <form asp-action="SignUp_Restaurant">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Name" class="control-label">店名:</label>
+                        <input asp-for="Name" class="form-control" placeholder="店名" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Address" class="control-label">地址:</label>
+                        <input asp-for="Address" class="form-control" placeholder="地址" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="ContactPhone" class="control-label">聯絡電話:</label>
+                        <input asp-for="ContactPhone" class="form-control" placeholder="格式:(0x)xxxx-xxxx，共10碼" pattern="^\(0[1-9]\)[1-9]{4}-[1-9]{4}$" required="required" />
+                        <span asp-validation-for="ContactPhone" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="送出" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="mb-3 d-flex justify-content-center container-fluid">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m12!1m8!1m3!1d5148.548948256582!2d120.6522527731854!3d24.151598717615226!3m2!1i1024!2i768!4f13.1!2m1!1z54eS6IKJ!5e0!3m2!1szh-TW!2stw!4v1731859569660!5m2!1szh-TW!2stw" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>

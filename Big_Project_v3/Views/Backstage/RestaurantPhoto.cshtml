@@ -1,0 +1,375 @@
+﻿@model IEnumerable<Big_Project_v3.Models.Photo>
+
+@{
+	ViewData["Title"] = "Restaurant";
+}
+
+<h1>餐廳管理</h1>
+
+<nav class="navbar">
+	<div class="btn-group" role="group" id="buttonGroup">
+		<button type="button" class="btn btn-outline-primary">餐廳資訊</button>
+		<button type="button" class="btn btn-outline-primary">介紹圖片管理</button>
+		<button type="button" class="btn btn-outline-primary">公告管理</button>
+	</div>
+
+	<div class="d-flex align-items-center me-2 ms-auto">
+		<button id="btnAddPhoto" class="btn btn-outline-primary me-2">新增圖片</button>
+		<button id="btnDeletePhoto" class="btn btn-outline-danger">刪除圖片</button>
+	</div>
+
+	<div class="d-flex align-items-center me-2 ms-auto">
+		<button id="noChange" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#NNN">取消更變</button>
+	</div>
+
+	<div class="d-flex align-items-center me-6 float-end">
+		<button id="yesChange" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#YYY">確認更變</button>
+	</div>
+</nav>
+
+<!-- 表單 -->
+<div class="container-fluid my-4" id="mainContainer">
+	<div class="card" style="width: 100%; height: 70vh; background-color:transparent">
+		<!-- 使用 70vh 讓高度也變得動態 -->
+		<div class="card-body d-flex align-items-center justify-content-center" style="height: 100%;">
+			<!-- 這裡是大格子的內容區域 -->
+			<div id="contentArea"  class="w-100 h-100" style="overflow: auto;">
+				<div class="table-responsive" style="height: 100%; overflow-y: auto;">
+					<table class="table table-bordered table-hover text-center align-middle" style="overflow-y: auto;">
+						<thead>
+							<tr>
+								<th>@Html.DisplayNameFor(model => model.PhotoId)</th>
+								<th>@Html.DisplayNameFor(model => model.PhotoUrl)</th>
+								<th>@Html.DisplayNameFor(model => model.PhotoType)</th>
+								<th>@Html.DisplayNameFor(model => model.Description)</th>
+								<th>編輯</th>
+							</tr>
+						</thead>
+						<tbody>
+							@{
+								int rowIndex = 0;
+								foreach (var item in Model)
+								{
+									rowIndex++;
+									<tr id="row-@item.PhotoId">
+										<td class="no-edit">@Html.DisplayFor(modelItem => item.PhotoId)</td>
+										<input type="hidden" name="PhotoId" value="@item.PhotoId" />
+										<input type="hidden" name="RestaurantId" value="@item.RestaurantId" />
+										<input type="hidden" name="UploadedAt" value="@item.UploadedAt" />
+										<input type="hidden" name="ImagePath" value="@item.ImagePath" />
+
+										<td data-name="PhotoUrl" style="min-width: 400px;">
+											<input type="text" value="@item.PhotoUrl" class="form-control edit-input disabled-input" name="PhotoUrl" readonly />
+										</td>
+										<td class="status-cell" data-name="PhotoType">
+											@if (rowIndex == 1)
+											{
+												<input type="hidden" name="PhotoType" value="Logo" />
+												<span>首圖</span>
+											}
+											else if (rowIndex == 2)
+											{
+												<input type="hidden" name="PhotoType" value="首圖" />
+												<span>Logo</span>
+											}
+											else
+											{
+												<select class="form-select edit-select disabled-input" name="PhotoType" disabled>
+													@if (item.PhotoType == "餐廳環境")
+													{
+														<option value="餐廳環境" selected="selected">餐廳環境</option>
+													}
+													else
+													{
+														<option value="餐廳環境">餐廳環境</option>
+													}
+													@if (item.PhotoType == "菜單")
+													{
+														<option value="菜單" selected="selected">菜單</option>
+													}
+													else
+													{
+														<option value="菜單">菜單</option>
+													}
+												</select>
+											}
+										</td>
+										<td data-name="Description">
+											<input type="text" value="@item.Description" class="form-control edit-input disabled-input" name="Description" readonly />
+										</td>
+
+										<td class="action-cell">
+											@if (rowIndex > 2)
+											{
+												<a href="javascript:void(0);" class="btn btn-primary edit-button" data-row-id="@item.PhotoId">Edit</a>
+												<a href="javascript:void(0);" class="btn btn-danger toggle-delete-button" data-row-id="@item.PhotoId">Delete</a>
+											}
+											else
+											{
+												<a href="javascript:void(0);" class="btn btn-primary edit-button" data-row-id="@item.PhotoId">Edit</a>
+											}
+										</td>
+									</tr>
+								}
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- -------------------------Modal------------------ -->
+<!-- 取消框 -->
+<div class="modal fade" id="NNN">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">要放棄修改嗎?</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">放棄取消</button>
+				<button type="button" class="btn btn-primary" onclick="location.reload();" data-bs-dismiss="modal">堅持取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 確認框 -->
+<div class="modal fade" id="YYY">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">確定要更變了嗎?</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">返回修改</button>
+				<button type="button" class="btn btn-primary" onclick="confirmChanges()" data-bs-dismiss="modal">確認更變</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- 刪除用確認框 -->
+<div class="modal fade" id="DELYYY">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">確定要刪除嗎?</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">不要刪除</button>
+				<button type="button" class="btn btn-primary" onclick="" data-bs-dismiss="modal">確認刪除</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Script -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+
+	$(document).ready(function () {
+		// 綁定按鈕的點擊事件
+		$('#buttonGroup .btn').click(function () {
+			var action = $(this).text();
+
+			if (action === '餐廳資訊') {
+				window.location.href = '/Backstage/Restaurant?trigger=RestaurantInfo';
+			} else if (action === '公告管理') {
+				window.location.href = '/Backstage/Restaurant?trigger=announcement';
+			}
+		});
+
+		// 當點擊"Edit"按鈕時，啟用編輯狀態
+		$('.edit-button').click(function () {
+			var rowId = $(this).data('row-id');
+			var row = $('#row-' + rowId);
+
+			row.find('td').each(function () {
+				var td = $(this);
+				if (!td.hasClass('action-cell') && !td.children().is('a') && !td.hasClass('no-edit')) {
+					if (td.hasClass('status-cell') && (td.find('select').length > 0)) {
+						td.find('select').prop('disabled', false);
+					} else if (td.find('input').length > 0) {
+						td.find('input').prop('readonly', false);
+					}
+				}
+			});
+
+			// 讓"Edit"按鈕變成"編輯中"
+			$(this).text('編輯中').prop('disabled', true);
+		});
+
+
+
+	});
+
+
+	function confirmChanges() {
+		let updatedRows = [];
+
+		$('tr').each(function () {
+			if ($(this).find('input.edit-input, select.edit-select').length > 0) {
+				let rowId = $(this).attr('id').replace('row-', '');
+				let rowData = {
+					PhotoId: parseInt($(this).find('input[name="PhotoId"]').val()),
+					PhotoUrl: $(this).find('input[name="PhotoUrl"]').val() || null,
+					Description: $(this).find('input[name="Description"]').val() || null,
+					// PhotoType: $(this).find('select[name="PhotoType"]').val() || null,
+					PhotoType: $(this).find('input[name="PhotoType"]').val() || $(this).find('select[name="PhotoType"]').val() || null,
+					RestaurantId: $(this).find('input[name="RestaurantId"]').val(),
+					ImagePath: $(this).find('input[name="ImagePath"]').val(),
+					//UploadedAt: $(this).find('input[name="UploadedAt"]').val() // 不修改，只顯示
+					UpdatedAt: new Date().toISOString()
+				};
+				updatedRows.push(rowData);
+			}
+		});
+
+		$.ajax({
+			url: "/Backstage/UpdatePhoto",
+			type: "POST",
+			contentType: "application/json",
+			data: JSON.stringify(updatedRows),
+			success: function (response) {
+				location.reload();
+			},
+			error: function (err) {
+				alert("發生錯誤，請稍後再試");
+			}
+		});
+	}
+</script>
+
+<script>
+	$('#btnAddPhoto').click(function () {
+		// 创建一个新的行作为新增的图片数据输入框
+		const newRowHtml = `
+					<tr class="new-photo-row">
+						<td class="no-edit">新增</td>
+						<td><input type="text" name="PhotoUrl" class="form-control" placeholder="输入图片 URL"></td>
+						<td>
+							<select name="PhotoType" class="form-select">
+								<option value="菜單">菜單</option>
+								<option value="餐廳環境">餐廳環境</option>
+							</select>
+						</td>
+						<td><input type="text" name="Description" class="form-control" placeholder="输入描述"></td>
+						<td>
+							<button class="btn btn-success save-new-photo">保存並上傳</button>
+						</td>
+					</tr>`;
+
+		// 将新行添加到表格的最后
+		$('table tbody').append(newRowHtml);
+	});
+
+	// 当点击保存新增的图片时
+	$('table').on('click', '.save-new-photo', function () {
+		// 获取新增的图片数据
+		const row = $(this).closest('tr');
+		const photoUrl = row.find('input[name="PhotoUrl"]').val();
+		const photoType = row.find('select[name="PhotoType"]').val();
+		const description = row.find('input[name="Description"]').val();
+		const restaurantId = $('#RestaurantId').val() || null;  // 确保是从合适的位置获取
+
+		// 生成新的图片数据对象
+		const newPhotoData = {
+			PhotoId: 0, // 新增时PhotoId默认为0或由数据库自动生成
+			PhotoUrl: photoUrl,
+			PhotoType: photoType,
+			Description: description,
+			RestaurantId: restaurantId,
+			UploadedAt: new Date().toISOString(),  // 当前时间作为上传时间
+			ImagePath: null // 如果是上传后确定路径，可以先设置为null
+		};
+
+		// 打印新数据检查
+		console.log("新增图片的数据：", newPhotoData);
+
+		// 发起 POST 请求，将新增的图片数据提交到后端
+		$.ajax({
+			url: "/Backstage/AddPhoto",
+			type: "POST",
+			contentType: "application/json",
+			data: JSON.stringify(newPhotoData),
+			success: function (response) {
+				// 成功后刷新页面或更新视图
+				alert("图片新增成功");
+				location.reload();
+			},
+			error: function (err) {
+				// 处理错误情况
+				console.error("图片新增失败", err);
+				alert("图片新增失败，请稍后再试");
+			}
+		});
+	});
+
+	// 刪除圖片按鈕點擊事件
+	$(document).ready(function () {
+		// 綁定「刪除圖片」按鈕的點擊事件，顯示確認框
+		$('#btnDeletePhoto').click(function () {
+			// 檢查是否有被標記為待刪除的行
+			if ($('tr.marked-for-deletion').length > 0) {
+				// 顯示刪除確認框
+				$('#DELYYY').modal('show');
+			} else {
+				alert('請先選擇要刪除的圖片');
+			}
+		});
+
+		// 在確認框中點擊「確認刪除」時，執行刪除操作
+		$('#DELYYY .btn-primary').click(function () {
+			// 收集所有標記為待刪除的行的 PhotoId
+			let photoIdsToDelete = [];
+			$('tr.marked-for-deletion').each(function () {
+				let photoId = $(this).find('input[name="PhotoId"]').val();
+				photoIdsToDelete.push(photoId);
+			});
+
+			if (photoIdsToDelete.length > 0) {
+				// 發送 AJAX 請求執行刪除操作
+				$.ajax({
+					url: "/Backstage/DeletePhotos",
+					type: "POST",
+					contentType: "application/json",
+					data: JSON.stringify(photoIdsToDelete),
+					success: function (response) {
+						console.log("圖片刪除成功");
+						// 刪除成功後，重新加載頁面
+						location.reload();
+					},
+					error: function (err) {
+						console.error("圖片刪除失敗", err);
+					}
+				});
+			}
+		});
+
+		// 綁定「刪除」按鈕的點擊事件，將該行標記為待刪除（灰色底色）
+		$(document).on('click', '.toggle-delete-button', function () {
+			var rowId = $(this).data('row-id'); // 取得行 ID
+			var row = $('#row-' + rowId); // 取得對應的 <tr> 行
+
+			// 切換標記待刪除的狀態
+			if (row.hasClass('marked-for-deletion')) {
+				row.removeClass('marked-for-deletion'); // 如果已標記，則取消標記
+				row.css('background-color', ''); // 恢復原來的背景顏色
+			} else {
+				row.addClass('marked-for-deletion'); // 添加標記待刪除的狀態
+				row.css('background-color', '#f8d7da'); // 將背景顏色改為淡紅色，表示待刪除
+			}
+		});
+	});
+
+
+</script>

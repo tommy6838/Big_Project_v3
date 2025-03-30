@@ -1,0 +1,254 @@
+﻿@model Big_Project_v3.ViewModels.RestaurantViewModel
+
+@* 橫幅首圖 *@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	@* <title>我的網頁</title> *@
+	<!-- 其他頭部內容，例如樣式檔 -->
+</head>
+
+<div class="position-relative">
+	<img src="@Model.MainPhoto.PhotoUrl" id="firstImg" />
+</div>
+
+@* 錨點選單 *@
+<div class="d-grid gap-4">
+	<nav class="navbar sticky-top bg-light restaurantNav">
+		<div class="container-fluid" style="background-color:#FFFDF6">
+			<ul id="navbar-example2" class="nav nav-tabs">
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="page" href="#scrollspyHeading1">總覽</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#scrollspyHeading2">相片</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#scrollspyHeading3">菜單</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#scrollspyHeading4">評論</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#scrollspyHeading5">我要訂位</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="row" id="material">
+			@* 綁定錨點 *@
+			<div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example d-grid gap-4 col" tabindex="0">
+
+				@* 店家公告 *@
+				<section class="p-lg-3 position-relative">
+					<div>
+						<h2 id="scrollspyHeading1" class="fw-bolder"> @Model.Restaurant.Name </h2>
+					</div>
+					<!-- 使用 Bootstrap Icons 作為收藏圖示 -->
+					<button class="btn btn-primary favorite position-absolute top-0 end-0 m-2
+                 @(Model.IsFavorite ? "favorite_active" : "")"
+							data-restaurant-id="@Model.Restaurant.RestaurantId">
+						<!-- 根據收藏狀態選擇心形圖示 -->
+						<i class="bi bi-heart@(Model.IsFavorite ? "-fill" : "")"></i>
+						<span class="favorite-text">收藏</span>
+					</button>
+					@Html.AntiForgeryToken() <!-- 防止 CSRF 攻擊 -->
+
+					<div>
+						<div>
+							@* 星星評論 *@
+							<div>
+								<div class="rating d-flex align-items-center">
+									<div>
+										@await Html.PartialAsync("_StarRatingPartialView", Model.Restaurant.AverageRating)
+									</div>
+									<div class="ms-2">
+										<span> @Model.Restaurant.AverageRating</span>
+									</div>
+									@* 價格區間 *@
+									<div class="price ms-3" title="@Model.Restaurant.GetPriceRange().Description">
+										@Model.Restaurant.GetPriceRange().Symbol
+									</div>
+								</div>
+							</div>
+						</div>
+						@* 店家公告 *@
+						<div>
+							<div class="announcement">
+								<h3>訂位注意事項及規範</h3>
+								<div id="announcementContent">
+									@foreach (var paragraph in Model.AnnouncementParagraphs.Take(3))
+									{
+										<p>@paragraph</p>
+									}
+									<div class="extra-content" style="display: none;">
+										@foreach (var paragraph in Model.AnnouncementParagraphs.Skip(3))
+										{
+											<p>@paragraph</p>
+										}
+									</div>
+								</div>
+								<button id="toggleButton" class="btn btn-link" style="" data-more="顯示更多" data-less="顯示更少">顯示更多</button>
+							</div>
+						</div>
+					</div>
+				</section>
+
+
+				<!-- 餐廳環境照片 -->
+				<section class="p-lg-3" id="beautyImg">
+					<h2 id="scrollspyHeading2" class="fw-bolder">店家照片</h2>
+					<div class="container mt-4">
+						<div class="row position-relative">
+							<!-- 顯示前五張照片 -->
+							@for (int i = 0; i < 6 && i < Model.EnvironmentPhotos.Count; i++)
+							{
+								<div class="col-md-4 mb-4 position-relative">
+									<img src="@Model.EnvironmentPhotos.ElementAt(i).PhotoUrl" class="img-fluid enlarged-image" alt="Image @i" data-bs-toggle="modal" data-bs-target="#imageModal" data-index="@i">
+								</div>
+								@if (i == 5)
+								{
+									<button type="button" class="btn btn-primary more-photos-btn me-2 mb-2 " data-bs-toggle="modal" data-bs-target="#imageModal" data-index="6">
+										更多照片+
+									</button>
+								}
+							}
+						</div>
+					</div>
+				</section>
+
+				<!-- Modal -->
+				<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered modal-lg">
+						<div class="modal-content">
+							<div class="modal-body">
+								<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+									<div class="carousel-inner">
+										@for (int i = 0; i < Model.EnvironmentPhotos.Count; i++)
+										{
+											<div class="carousel-item @(i == 0 ? "active" : "")">
+												<img src="@Model.EnvironmentPhotos.ElementAt(i).PhotoUrl" class="d-block" alt="Image @i">
+											</div>
+										}
+									</div>
+									<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+										<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+										<span class="visually-hidden">Previous</span>
+									</button>
+									<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+										<span class="carousel-control-next-icon" aria-hidden="true"></span>
+										<span class="visually-hidden">Next</span>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				@* 菜單 *@
+				<section class="p-lg-3">
+					<h2 id="scrollspyHeading3" class="fw-bolder">菜單</h2>
+					<a class="restaurantMenu" href="@Model.MenuPhoto.PhotoUrl" target="_blank">點擊查看店家菜單</a>
+				</section>
+
+				@* 顧客評論 *@
+				<section class="p-lg-3">
+					<h2 id="scrollspyHeading4" class="fw-bolder">顧客評論</h2>
+					<span>
+						整體評分和評論<br />
+						只有在這家餐廳用餐過的食客才能發表評論<br />
+					</span>
+					@* 星星評論 *@
+					<div class="rating d-flex align-items-center">
+						<div>
+							@await Html.PartialAsync("_StarRatingPartialView", Model.Restaurant.AverageRating)
+						</div>
+						<div class="ms-2">
+							<span> @Model.Restaurant.AverageRating</span>
+						</div>
+					</div>
+					<hr />
+
+					@* 文字評論 *@
+					<div id="reviews-container" data-restaurant-id="@Model.Restaurant.RestaurantId">
+						@await Html.PartialAsync("_ReviewsPartial", Model)
+					</div>
+				</section>
+
+				@section Scripts {
+					<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+					<script src="~/js/pagination.js"></script>
+				}
+			</div>
+
+			<div class="col">
+				@* 店家資訊 *@
+				<div class="col">
+					@* GoogleMap *@
+					<section class="p-lg-3">
+						<div>
+							<h2 class="fw-bolder">店家位址</h2>
+							<div>
+								<iframe src="@Model.Restaurant.GoogleMapAddress"
+										width="400"
+										height="300"
+										style="border:0;"
+										loading="lazy"
+										referrerpolicy="no-referrer-when-downgrade">
+								</iframe>
+							</div>
+						</div>
+					</section>
+					<section class="p-lg-3">
+						<h2 class="fw-bolder">店家資訊</h2>
+						<ul class="list-unstyled d-grid gap-3">
+							<li>
+								<div>
+									<i class="bi bi-shop"></i>
+									<span>
+										店家地址:@Model.Restaurant.Address
+									</span>
+								</div>
+							</li>
+							<li>
+								<div>
+									<i class="bi bi-telephone"></i>
+									<span>
+										聯絡電話: @Model.Restaurant.ContactPhone
+									</span>
+								</div>
+							</li>
+							<li>
+								<div>
+									<i class="bi bi-clock"></i>
+									<span>
+										營業時間:@Model.Restaurant.BusinessHoursStart ~ @Model.Restaurant.BusinessHoursEnd <br />
+									</span>
+								</div>
+							</li>
+							<li>
+								<div>
+									<i class="bi bi-p-circle"></i>
+									<span>
+										是否附有停車場:@Model.Restaurant.HasParking
+									</span>
+								</div>
+							</li>
+						</ul>
+					</section>
+
+					<section class="p-lg-3" id="scrollspyHeading5">
+						<h2 class="fw-bolder">我要訂位</h2>
+						<!-- 訂位表單或按鈕 -->
+						<a href="@Url.Action("BookingPage", "Booking", new { RestaurantId = Model.Restaurant.RestaurantId })" class="btn btn-primary bookbtn"> 立即訂位 </a>
+					</section>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

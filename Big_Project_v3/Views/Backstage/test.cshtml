@@ -1,0 +1,44 @@
+﻿@{
+	ViewData["Title"] = "test";
+}
+
+<h1>test</h1>
+
+
+<!-- 彈出視窗 -->
+<div class="modal fade" id="newMessagesModal" tabindex="-1" aria-labelledby="newMessagesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newMessagesModalLabel">通知</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                目前有 <span id="newMessagesCount">0</span> 筆新訊息！
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">返回</button>
+                <a href="/Messages/Details" class="btn btn-primary">查看詳細</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 每隔 10 秒查詢新訊息
+    setInterval(() => {
+        fetch('/Backstage/GetNewMessagesCount')
+            .then(response => response.json())
+            .then(data => {
+                if (data.count > 0) {
+                    // 更新訊息數量
+                    document.getElementById('newMessagesCount').textContent = data.count;
+
+                    // 顯示視窗
+                    const modal = new bootstrap.Modal(document.getElementById('newMessagesModal'));
+                    modal.show();
+                }
+            })
+            .catch(error => console.error('Error fetching new messages:', error));
+    }, 10000); // 每 10 秒執行一次
+</script>

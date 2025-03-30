@@ -23,7 +23,7 @@ public partial class Review
     /// <summary>
     /// 評分（1-5 星）（前台 + 後台）。此欄位存儲使用者對餐廳的評分，用於計算平均評分和顯示給其他用戶。
     /// </summary>
-    public int? Rating { get; set; }
+    public double? Rating { get; set; }
 
     /// <summary>
     /// 評論內容（前台 + 後台）。此欄位存儲使用者對餐廳的詳細評論，用於提供其他用戶參考。
@@ -33,17 +33,19 @@ public partial class Review
     /// <summary>
     /// 評論日期（前台 + 後台）。此欄位記錄評論的發表日期，用於排序和顯示。
     /// </summary>
-    public DateTime? ReviewDate { get; set; }
+    public DateOnly? ReviewDate { get; set; }
 
     /// <summary>
     /// 評論建立時間（前台 + 後台）。此欄位記錄評論紀錄的建立時間，用於審計和管理。
     /// </summary>
-    public DateTime CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     /// <summary>
     /// 評論更新時間（前台 + 後台）。此欄位記錄評論紀錄的最後更新時間，用於追蹤資料變更歷史。
     /// </summary>
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+
+    public string? IsReviewLocked { get; set; } // 新增欄位
 
     public virtual Restaurant? Restaurant { get; set; }
 

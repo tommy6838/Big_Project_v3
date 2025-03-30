@@ -1,0 +1,486 @@
+﻿@model Big_Project_v3.Models.BookingPageViewModel
+
+<head>
+    <title>顧客訂位頁面</title>
+    <style>
+        fieldset {
+            border: 1px solid #ccc;
+            padding: 1em;
+            border-radius: 1px;
+        }
+
+        .restaurantImage img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<div>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+</div>
+
+<div class="container mt-4" style="margin-top:0px !important;">
+    <form asp-action="BookingPagePost" method="post" id="reservationForm">
+        <!-- Top row for restaurant name, image, and booking options -->
+        <div class="row">
+            <!-- Left Column (Restaurant Name & Image) -->
+            <div class="col-md-5">
+                <br>
+                <h1 class="restaurantName">
+                    @ViewData["RestaurantName"]
+                </h1>
+                <div class="restaurantImage">
+                    @if (!string.IsNullOrEmpty(Model.PhotoUrl))
+                    {
+                        <img src="@Model.PhotoUrl" alt="餐廳封面圖片">
+                    }
+                    else
+                    {
+                        <img src="default-image.jpg" alt="餐廳封面圖片">
+                    }
+                </div>
+                <br>
+            </div>
+
+            <!-- Right Column (Booking Options) -->
+            <div class="col-md-7">
+                <br>
+                <!-- 大人數量選單 -->
+                <label for="adults">大人：</label>
+                <select id="adults" name="NumAdults" onchange="validateGuestCount()">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                </select>
+
+                <!-- 小孩數量選單 -->
+                <label for="children">小孩：</label>
+                <select id="children" name="NumChildren" onchange="validateGuestCount()">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+
+                <br><br>
+
+                <!-- Date and Time Selection -->
+                <label for="Date">選擇日期：</label>
+                <input type="date" id="Date" name="Date">
+                <label for="time" style="margin-left: 20px;">選擇時段：</label>
+                <select id="time" name="time" onchange="updateButtons()">
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00">17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                    <option value="22:00">22:00</option>
+                    <option value="22:30">22:30</option>
+                    <option value="23:00">23:00</option>
+                    <option value="23:30">23:30</option>
+                    <option value="00:00">00:00</option>
+                    <option value="00:30">00:30</option>
+                    <option value="01:00">01:00</option>
+                    <option value="01:30">01:30</option>
+                </select>
+                <br><br>
+
+                <!-- Dynamic Time Buttons -->
+                <div id="timeButtons">
+                    <!-- Buttons generated by JavaScript -->
+                </div>
+                <br>
+                <div id="selectedTimeDisplay"></div>
+            </div> <!-- 結束 Right Column -->
+        </div> <!-- 結束 row -->
+
+        <!-- Bottom row for Booking Information -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <fieldset>
+                    <legend class="text-center mb-4">訂位人資訊</legend>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="customerName" name="BookerName" value="@ViewBag.Name" required>
+                        <label for="customerName">訂位人姓名</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="tel" class="form-control" id="phoneNumber" name="BookerPhone" pattern="^\d{8,}$" value="@ViewBag.ContactPhone" required>
+                        <label for="phoneNumber">電話號碼</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="email" name="BookerEmail" value="@ViewBag.ContactEmail" required>
+                        <label for="email">Email</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" id="note" name="SpecialRequests" placeholder="備註" rows="4" style="height: 100px;"></textarea>
+                        <label for="note">備註</label>
+                    </div>
+
+@*                     <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="userID" name="UserID" placeholder="UserID">
+                        <label for="userID" >UserID(測試用)</label>
+                    </div> *@
+
+                    <!-- 隱藏欄位 -->
+                    <input type="hidden" id="userID" name="UserID" value="@Model.UserId" />
+                    <input type="hidden" id="reservationDate" name="ReservationDate" required>
+                    <input type="hidden" id="reservationTime" name="ReservationTime" required>
+                    <input type="hidden" name="RestaurantID" value="@Model.Restaurants?.FirstOrDefault()?.RestaurantId">
+                    <input type="hidden" id="reservationStatus" name="ReservationStatus" value="未確認" required>
+                    
+                    @* CreatedAt和UpdateAt *@
+                    <input type="hidden" id="createdAt" name="CreatedAt" value="" required>
+                    <input type="hidden" id="updatedAt" name="UpdatedAt" value="" required>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-lg"
+                                style="background-color: #D25823; color: white; border: none;"
+                                onmouseover="this.style.backgroundColor='#C53F0F'"
+                                onmouseout="this.style.backgroundColor='#D25823'">
+                            完成訂位
+                        </button>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+
+    </form>
+</div> <!-- 結束 container -->
+
+<script>
+   // 假設 BusinessHoursStart 是從 ViewData 傳過來的，格式為 HH:mm（例如 09:00）
+    const businessHoursStart = "@ViewData["BusinessHoursStart"]";  // 這是從控制器傳過來的時間
+    //轉換為Date時間型別
+    const businessHoursStartDate = new Date(`1970-01-01T${businessHoursStart}:00`);
+    const lastCheckInTime="@ViewData["LastCheckInTime"]";
+    // 轉換為Date時間型別
+    const lastCheckInTimeDate = new Date(`1970-01-01T${lastCheckInTime}:00`);
+
+
+    // 取得今天的日期
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+
+window.onload = function () {
+    const reservationDateInput = document.getElementById("Date");
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const todayDate = `${year}-${month}-${day}`;
+
+    reservationDateInput.value = todayDate;
+    reservationDateInput.min = todayDate; // 設置最小選擇日期為今天
+    updateDropdownOptions();
+    document.getElementById("timeButtons").style.display = 'none';
+
+    // 觸發時間選擇下拉選單的change事件
+    const timeSelect = document.getElementById("time");
+    updateButtons(); // 更新按鈕
+    timeSelect.dispatchEvent(new Event('change'));  // 手動觸發change事件
+};
+
+// 更新下拉選單中的時間選項
+function updateDropdownOptions() {
+    const reservationDateInput = document.getElementById("Date");
+    const timeSelect = document.getElementById("time");
+    const timeButtonsDiv = document.getElementById("timeButtons");
+
+    const isToday = (reservationDateInput.value === `${year}-${month}-${day}`);
+    const currentTime = new Date(); // 當前時間
+
+    // 清空下拉選單
+    timeSelect.innerHTML = "";
+
+    // 重新生成選項，只顯示可用的時間
+    const times = [
+        "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00",
+        "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00",
+        "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30", "00:00",
+        "00:30", "01:00", "01:30"
+    ];
+
+    let hasAvailableOptions = false;
+
+    for (const time of times) {
+        const optionTime = new Date(`${year}-${month}-${day}T${time}:00`);
+
+        // 如果是今天並且時間在當前時間之前，則跳過
+        if (isToday && optionTime < currentTime && !(time === "00:00" || time === "00:30" || time === "01:00" || time === "01:30")) {
+            continue;
+        }
+
+        // 新增有效選項，但要加上 BusinessHoursStart 的判斷條件
+        const businessStartTime = new Date(`${year}-${month}-${day}T${businessHoursStart}:00`);  // 將 BusinessHoursStart 轉為日期時間格式
+
+        if (optionTime < businessStartTime&& !(time === "00:00" || time === "00:30" || time === "01:00" || time === "01:30")) {
+         continue;  // 若時間小於 BusinessHoursStart，則跳過
+        }
+
+        /////最後訂位時間判定 下拉選單
+        const lastCheckInTimeDate2 = new Date(`${year}-${month}-${day}T${lastCheckInTime}:00`);
+
+            // 檢查 lastCheckInTimeDate2 是否大於等於 02:00
+        if (lastCheckInTimeDate2 >= new Date(`${year}-${month}-${day}T02:00:00`)) {
+            // 如果 optionTime 大於 lastCheckInTimeDate2 或者 optionTime 是 00:00, 00:30, 01:00, 01:30 時
+            if (optionTime > lastCheckInTimeDate2 || ["00:00", "00:30", "01:00", "01:30"].includes(time)) {
+                continue;  // 隱藏該時間
+            }
+        }
+
+        // 檢查 lastCheckInTimeDate2 是否小於 02:00
+        if (lastCheckInTimeDate2 < new Date(`${year}-${month}-${day}T02:00:00`)) {
+            // 如果 optionTime 大於 lastCheckInTimeDate2 且小於 02:00
+            if (optionTime > lastCheckInTimeDate2 && optionTime < new Date(`${year}-${month}-${day}T02:00:00`)) {
+                continue;  // 隱藏該時間
+            }
+        }
+
+
+
+        // 新增有效選項
+        const option = document.createElement("option");
+        option.value = time;
+        option.text = time;
+        timeSelect.appendChild(option);
+        hasAvailableOptions = true;
+    }
+
+    // 無可用選項時顯示提示
+    if (!hasAvailableOptions) {
+        timeButtonsDiv.innerHTML = "<p>無可用時段</p>";
+    } else {
+        updateButtons();
+    }
+}
+//////
+    function updateButtons() {
+        const timeSelect = document.getElementById("time");
+        const selectedTime = timeSelect.value;
+
+        if (!selectedTime) return; // 如果沒有選擇時間則不生成按鈕
+
+        let baseTime = new Date(`${year}-${month}-${day}T${selectedTime}:00`);
+        const timeButtonsDiv = document.getElementById("timeButtons");
+
+        // 清空之前的按鈕
+        timeButtonsDiv.innerHTML = "";
+
+        // 取得當前時間以做檢查
+        const currentTime = new Date();
+            
+        // 判斷是否為今天，來決定是否過濾過期的時間
+        const isToday = (document.getElementById("Date").value === `${year}-${month}-${day}`);
+
+        // 跨日的時間按鈕列表
+        const crossDayTimes = ["00:00", "00:15", "00:30", "00:45", "01:00", "01:15", "01:30", "01:45", "02:00"];
+        
+        // 生成按鈕的範圍，並過濾掉已過去的時段
+        for (let i = -2; i <= 2; i++) {
+            const buttonTime = new Date(baseTime.getTime() + i * 15 * 60 * 1000); // 增加或減少 15 分鐘
+            const buttonTimeString = buttonTime.toTimeString().slice(0, 5); // 獲取 HH:mm 格式
+            const businessHoursStartString = businessHoursStartDate.toTimeString().slice(0, 5); // 格式化為 HH:mm
+            const lastCheckInTimeString = lastCheckInTimeDate.toTimeString().slice(0, 5); // 格式化為 HH:mm
+
+
+            // 如果是今天且按鈕的時間小於當前時間，且不是跨日時間，則跳過
+            if (isToday && buttonTime < currentTime && !crossDayTimes.includes(buttonTimeString)) {
+                continue;
+            }
+            //
+            // 當 lastCheckInTimeString 大於 02:00 時，如果 buttonTimeString 大於 lastCheckInTimeString 或等於 "00:00" 時，則不生成按鈕
+            if (lastCheckInTimeString > "02:00" && (buttonTimeString > lastCheckInTimeString || buttonTimeString === "00:00")) {
+                continue;
+            }
+
+            // 當 lastCheckInTimeString 小於 02:00 時，如果 buttonTimeString 大於 lastCheckInTimeString 且小於 02:00，則不生成按鈕
+            if (lastCheckInTimeString < "02:00" && buttonTimeString > lastCheckInTimeString && buttonTimeString <= "02:00") {
+                continue;
+            }
+
+
+            if (buttonTimeString < businessHoursStartString && !crossDayTimes.includes(buttonTimeString)) {
+                    continue;
+            }
+
+
+            // 只生成未過的按鈕
+            const button = document.createElement("button");
+            button.type = "button";  // 設置按鈕的類型為 "button" 而非 "submit"
+            button.innerText = buttonTimeString;
+
+            // 加入 Bootstrap 5 按鈕樣式
+                button.classList.add("btn", "btn-primary", "btn-sm", "m-1"); button.style.cssText = "background-color: #D25823; color: white; border: none;"; button.onmouseover = () => button.style.backgroundColor = "#C53F0F"; button.onmouseout = () => button.style.backgroundColor = "#D25823";
+
+
+            button.onclick = function () {
+                // 顯示已選定的日期和時間在 selectedTimeDisplay 中
+                const selectedDate = document.getElementById("Date").value;
+                const selectedTimeDisplay = document.getElementById("selectedTimeDisplay");
+
+                // 檢查是否需要加一天（跨日期的情況）
+                let displayDate = new Date(`${selectedDate}T${buttonTimeString}:00`);
+                if (crossDayTimes.includes(buttonTimeString)) {
+                    displayDate.setDate(displayDate.getDate() + 2);  // 跨日期，將日期加一天
+                }
+
+                const displayDateString = displayDate.toISOString().split('T')[0]; // 只取日期部分
+                const displayTimeString = buttonTimeString;
+
+                //新增隱藏欄位的資料        
+                document.getElementById("reservationTime").value = `${displayTimeString}`;  
+                
+                document.getElementById("reservationDate").value = `${displayDateString}` ;  // 將日期部分設置到 reservationDate 欄位
+               
+             //
+                selectedTimeDisplay.innerHTML = `已選擇時間: ${displayDateString} ${displayTimeString}`;
+            };
+
+            timeButtonsDiv.appendChild(button);
+        }
+    }
+//////
+
+    // 當日期或時間選擇變更時，重新更新時間選項
+    document.getElementById("Date").addEventListener("change", function () {
+        updateDropdownOptions();
+    });
+
+    // 當時間下拉選單變更時，更新按鈕顯示並顯示時間按鈕
+    document.getElementById("time").addEventListener("change", function () {
+        const selectedOption = this.options[this.selectedIndex];
+        if (selectedOption) {
+            updateButtons();
+            document.getElementById("timeButtons").style.display = 'block'; // 顯示時間按鈕
+        } else {
+            document.getElementById("timeButtons").innerHTML = "<p>無可用時段</p>";
+            document.getElementById("timeButtons").style.display = 'block'; // 顯示無可用時段
+        }
+    });
+
+
+    //-----------------------------------------
+    function validateGuestCount() {
+        const adultsSelect = document.getElementById("adults");
+        const childrenSelect = document.getElementById("children");
+
+        if (!adultsSelect || !childrenSelect) {
+            console.error("無法找到大人或小孩的選擇框元素");
+            return;
+        }
+
+        const adults = parseInt(adultsSelect.value);
+        const children = parseInt(childrenSelect.value);
+        const totalGuests = adults + children;
+
+        // 重設大人選項
+        for (let i = 0; i < adultsSelect.options.length; i++) {
+            adultsSelect.options[i].disabled = false; // 重新啟用所有選項
+        }
+
+        // 當小孩數量 >= 6，禁用大人選項 3 以上
+        if (children >= 6) {
+            for (let i = 2; i < adultsSelect.options.length; i++) {
+                adultsSelect.options[i].disabled = true; // 禁用大人選項 3 以上
+            }
+        }
+
+        // 如果總人數超過 8，調整小孩數量確保不超過 8
+        if (totalGuests > 8) {
+            childrenSelect.value = Math.max(0, 8 - adults); // 調整小孩數量，確保總人數不超過 8
+        }
+
+        // 更新小孩選項的可選範圍，確保不會超過可用容量
+        for (let i = 0; i < childrenSelect.options.length; i++) {
+            childrenSelect.options[i].disabled = i > (8 - adults); // 禁用超過剩餘容量的選項
+        }
+
+        // 更新大人選項，確保總人數不超過 8
+        for (let i = 0; i < adultsSelect.options.length; i++) {
+            adultsSelect.options[i].disabled = (i + children > 8); // 禁用總人數超過 8 的選項
+        }
+    }
+
+    //---------------
+
+        document.getElementById("reservationForm").addEventListener("submit", function (event) {
+            const reservationDate = document.getElementById("reservationDate").value;
+            const reservationTime = document.getElementById("reservationTime").value;
+
+            if (!reservationDate || !reservationTime) {
+                event.preventDefault(); // 阻止表單提交
+                alert("尚未選擇訂位時間");
+            }
+        });
+
+        //CreateAt和UpdateAt設置-------------------------
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("reservationForm");
+            const createdAtField = document.getElementById("createdAt");
+            const updatedAtField = document.getElementById("updatedAt");
+
+            // 表單提交時觸發
+            form.addEventListener("submit", function () {
+                const now = new Date();
+                const formattedDate = formatDateTime(now);
+
+                // 更新隱藏欄位
+                createdAtField.value = formattedDate;
+                updatedAtField.value = formattedDate;
+
+                // Debug: 確認欄位值
+                console.log("CreatedAt:", createdAtField.value);
+                console.log("UpdatedAt:", updatedAtField.value);
+            });
+
+            // 格式化日期時間為 "YYYY-MM-DDTHH:mm:ss"，使用本地時間
+            function formatDateTime(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, "0");
+                const day = String(date.getDate()).padStart(2, "0");
+                const hours = String(date.getHours()).padStart(2, "0"); // 本地小時
+                const minutes = String(date.getMinutes()).padStart(2, "0");
+                const seconds = String(date.getSeconds()).padStart(2, "0");
+                return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+            }
+        });
+
+
+</script>

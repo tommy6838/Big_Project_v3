@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "訂位關閉";
+}
+<div class="container text-center mt-5" style="margin-top:0px !important">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <!-- 圖示 -->
+            <div class="mb-4">
+                <i class="bi bi-x-circle text-danger" style="font-size: 4rem;"></i>
+            </div>
+            <!-- 標題 -->
+            <h1 class="display-5 fw-bold">@ViewBag.Message</h1>
+            <!-- 描述 -->
+            <p class="fs-5 text-muted">目前餐廳未開放訂位，請稍後再試。</p>
+            <!-- 按鈕 -->
+            <a href="@Url.Action("Index", "HomePage")" class="btn btn-lg mt-3"
+               style="background-color: #D25823; color: white; border: none;"
+               onmouseover="this.style.backgroundColor='#C53F0F'"
+               onmouseout="this.style.backgroundColor='#D25823'">
+                返回餐廳列表
+            </a>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,89 @@
+﻿@model Big_Project_v3.Models.User
+
+<br>
+
+<form asp-action="Create" method="post">
+    <div class="container">
+        <!-- 註冊表單 -->
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <fieldset>
+                    <legend class="text-center mb-4">會員註冊</legend>
+
+                    <!-- 姓名欄位 -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="Name" class="form-control" placeholder="姓名" />
+                        <label asp-for="Name">姓名</label>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <!-- 帳號欄位 -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="UserName" class="form-control" placeholder="帳號 (英文或數字)" pattern="[a-zA-Z0-9]+" title="帳號只能包含英文或數字" />
+                        <label asp-for="UserName">帳號 (只能包含英文和數字)</label>
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+
+                    <!-- 電子郵件欄位 -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="ContactEmail" class="form-control" placeholder="電子信箱" />
+                        <label asp-for="ContactEmail">電子信箱</label>
+                        <span asp-validation-for="ContactEmail" class="text-danger"></span>
+                    </div>
+
+                    <!-- 電話欄位 -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="ContactPhone" class="form-control" placeholder="電話號碼" pattern=".{8,}" title="電話號碼必須至少8位數" />
+                        <label asp-for="ContactPhone">電話</label>
+                        <span asp-validation-for="ContactPhone" class="text-danger"></span>
+                    </div>
+
+                    <!-- 密碼欄位 -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="PasswordHash" class="form-control" placeholder="密碼" type="password" />
+                        <label asp-for="PasswordHash">密碼</label>
+                        <span asp-validation-for="PasswordHash" class="text-danger"></span>
+                    </div>
+
+                    <!-- 確認密碼欄位 -->
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="ConfirmPassword" placeholder="確認密碼" required />
+                        <label for="ConfirmPassword">確認密碼</label>
+                    </div>
+
+                    <!-- 顯示錯誤訊息 -->
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-lg" style="background-color: #D25823; color: white; border: none;"
+                                onmouseover="this.style.backgroundColor='#C53F0F'"
+                                onmouseout="this.style.backgroundColor='#D25823'">
+                            註冊
+                        </button>
+
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    document.querySelector("form").addEventListener("submit", async function (event) {
+        var password = document.getElementById("PasswordHash").value;
+        var confirmPassword = document.getElementById("ConfirmPassword").value;
+
+        // 驗證密碼是否一致
+        if (password !== confirmPassword) {
+            event.preventDefault(); // 阻止表單提交
+            alert("確認密碼和密碼不一致，請重新輸入");
+            return;
+        }
+    });
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

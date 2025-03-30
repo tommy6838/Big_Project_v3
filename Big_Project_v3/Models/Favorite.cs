@@ -23,7 +23,7 @@ public partial class Favorite
     /// <summary>
     /// 收藏加入時間（前台 + 後台）。此欄位記錄收藏紀錄的加入時間，用於排序和管理。
     /// </summary>
-    public DateTime AddedAt { get; set; }
+    public DateTime? AddedAt { get; set; }
 
     public virtual Restaurant? Restaurant { get; set; }
 

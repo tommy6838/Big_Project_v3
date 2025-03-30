@@ -1,3 +1,9 @@
+/*讓導覽列不遮蔽錨點的部分*/
+:root {
+    scroll-padding-top: 3.5rem;
+}
+
+
 html {
   font-size: 14px;
 }
@@ -17,6 +23,6 @@ html {
   min-height: 100%;
 }
 
-body {
+/*body {
   margin-bottom: 60px;
-}
+}*/

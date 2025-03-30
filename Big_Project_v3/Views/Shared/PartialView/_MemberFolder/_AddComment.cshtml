@@ -1,0 +1,42 @@
+﻿@model Big_Project_v3.ViewModels.CreateReviewViewModel
+
+<form id="addCommentForm">
+    <!-- 隱藏的 RestaurantID 欄位 -->
+    <input type="hidden" id="restaurantId" name="RestaurantID" value="@Model.RestaurantID" />
+
+    <div class="mb-3 d-flex align-items-center">
+        <label for="rating" class="me-2">評分：</label>
+        @await Html.PartialAsync("PartialView/_MemberFolder/StarRatingInput", Model.Rating)
+    </div>
+
+    <div class="mb-3">
+        <label for="reviewText">留言：</label>
+        <textarea id="reviewText" name="ReviewText" class="form-control" rows="3" required>@Model.ReviewText</textarea>
+    </div>
+    <button type="button" class="btn btn-success" id="submitCommentBtn">送出評論</button>
+</form>
+
+
+
+@* <style>
+    .rating label {
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    .rating input[type="radio"] {
+        display: none;
+    }
+
+    .rating label::before {
+        content: '★';
+        font-size: 1.5em;
+        color: gray;
+    }
+
+    .rating input[type="radio"]:checked ~ label::before,
+    .rating label:hover::before,
+    .rating label:hover ~ label::before {
+        color: gold;
+    }
+</style> *@

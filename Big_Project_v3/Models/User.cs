@@ -1,49 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Big_Project_v3.Models;
 
 public partial class User
 {
-    /// <summary>
-    /// 使用者的唯一識別碼，主鍵（PK），自動遞增
-    /// </summary>
     public int UserId { get; set; }
 
-    /// <summary>
-    /// 用於登入的帳號名稱
-    /// </summary>
-    public string? UserName { get; set; }
+    [Required(ErrorMessage = "使用者名稱是必填的。")]
+    [StringLength(50, ErrorMessage = "使用者名稱不能超過 50 個字元。")]
+    public string UserName { get; set; }
 
-    /// <summary>
-    /// 密碼的哈希值
-    /// </summary>
-    public string PasswordHash { get; set; } = null!;
+    [Required(ErrorMessage = "密碼是必填的。")]
+    [DataType(DataType.Password)]
+    public string PasswordHash { get; set; }
 
-    /// <summary>
-    /// 使用者姓名
-    /// </summary>
-    public string? Name { get; set; }
+    [Required(ErrorMessage = "姓名是必填的。")]
+    [StringLength(100, ErrorMessage = "姓名不能超過 100 個字元。")]
+    public string Name { get; set; }
 
-    /// <summary>
-    /// 聯絡電話
-    /// </summary>
-    public string? ContactPhone { get; set; }
+    [Required(ErrorMessage = "聯絡電話是必填的。")]
+    [Phone(ErrorMessage = "請輸入有效的聯絡電話。")]
+    public string ContactPhone { get; set; }
 
-    /// <summary>
-    /// 聯絡電子郵件
-    /// </summary>
-    public string? ContactEmail { get; set; }
+    [Required(ErrorMessage = "電子郵件是必填的。")]
+    [EmailAddress(ErrorMessage = "請輸入有效的電子郵件地址。")]
+    public string ContactEmail { get; set; }
 
-    /// <summary>
-    /// 帳號建立時間
-    /// </summary>
-    public DateTime CreatedAt { get; set; }
-
-    /// <summary>
-    /// 帳號更新時間
-    /// </summary>
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     public virtual ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
 

@@ -1,0 +1,166 @@
+﻿@model IEnumerable<Big_Project_v3.Models.Review>
+
+@{
+    ViewData["Title"] = "CustomerFeedback";
+}
+
+@{
+    int five = @ViewBag.RatingsCount[5] ?? 0; // 5 星評論數
+    int four = @ViewBag.RatingsCount[4] ?? 0; // 4 星評論數
+    int three = @ViewBag.RatingsCount[3] ?? 0; // 3 星評論數
+    int two = @ViewBag.RatingsCount[2] ?? 0; // 2 星評論數
+    int one = @ViewBag.RatingsCount[1] ?? 0; // 1 星評論數
+
+    // 總平均分
+    double averageRating = (double)ViewBag.TotalScore / (double)ViewBag.TotalReviews;
+    var stars = averageRating * 20;
+    string averageRatingString = averageRating.ToString("F1");
+    string starsString = stars.ToString("F0");
+    string noRating = "無";
+    string noReview = "目前無評論";
+}
+
+<h1>評分與評論</h1>
+<hr />
+
+<style>
+    /* ----- 進度條樣式 ----- */
+    .progress {
+        height: 20px; /* 設定進度條高度 */
+        border-radius: 6px; /* 進度條左右圓角 */
+        overflow: hidden; /* 確保圓角有效 */
+    }
+
+    .progress-bar {
+        background-color: #fbbc04; /* 設定進度條顏色 */
+        border-radius: 6px; /* 進度條左右圓角 */
+    }
+
+    .rating-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px; /* 每行間距 */
+    }
+
+    .star-label {
+        font-size: 16px;
+        margin-right: 10px;
+        width: 40px;
+        text-align: right; /* 星級數字靠右對齊 */
+    }
+    /* ----- 進度條樣式 ----- */
+
+    /* ----- 星星樣式 ----- */
+    .star-rating {
+        font-size: 1.5rem;
+        color: #d3d3d3; /* 灰色為空星顏色 */
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .star-rating-fill {
+        color: #fbbc04; /* 金黃色為滿星顏色 */
+        position: absolute;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+    }
+
+        .star-rating::before,
+        .star-rating-fill::before {
+            content: "★★★★★"; /* 五顆星圖案 */
+        }
+    /* ----- 星星樣式 ----- */
+</style>
+
+@* 總評論 *@
+<div class="container container-fluid mt-4">
+    <div class="row flex-nowrap">
+        <div class="col-10">
+            <div id="rating-bars"></div>
+        </div>
+        <div class="col-2 d-flex flex-column align-items-center">
+            <div style="font-size:3.5rem;">
+                @if (averageRatingString == "非數值")
+                {
+                    @noRating
+                }
+                else
+                {
+                    @averageRatingString
+                }
+            </div> @* 總平均分（小數1位） *@
+            <div class="star-rating">
+                <div class="star-rating-fill" style="width:@starsString%"></div>
+            </div>
+            <div>@ViewBag.TotalReviews 篇評論</div> @* 總評論數 *@
+        </div>
+    </div>
+</div>
+
+@* 判斷有無評論 *@
+<h1 class="mt-3">
+    @if (averageRatingString == "非數值")
+    {
+        @noReview
+    }
+</h1>
+
+@* 各別評論 *@
+@foreach (var review in Model)
+{
+    <div class="card mt-3">
+        <div class="card-header">@review.User!.Name</div>
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <div class="star-rating" style="margin-right:5px;">
+                    <div class="star-rating-fill" style="width:@(review.Rating * 20)%"></div>
+                </div>
+                <div>@review.ReviewDate</div>
+            </div>
+            <div>@review.ReviewText</div>
+        </div>
+    </div>
+}
+
+<script>
+    // 模擬評論數據
+    const ratings = {
+        5: @five, // 5 星評論數
+        4: @four, // 4 星評論數
+        3: @three, // 3 星評論數
+        2: @two, // 2 星評論數
+        1: @one  // 1 星評論數
+            };
+
+    // 找到最多評論的數量作為 100% 的基準
+    const maxReviews = Math.max(...Object.values(ratings));
+
+    // 明確按照 5 星到 1 星的順序顯示
+    const starOrder = [5, 4, 3, 2, 1];
+
+    // 動態生成進度條
+    const ratingBarsContainer = document.getElementById('rating-bars');
+    starOrder.forEach(star => {
+        const count = ratings[star];
+        const percentage = ((count / maxReviews) * 100).toFixed(2); // 計算相對百分比
+        const progressBar = `
+                <div class="rating-row">
+               <div class="star-label">${star} 星</div>
+               <div class="progress flex-grow-1">
+                 <div
+                class="progress-bar"
+                role="progressbar"
+                style="width: ${percentage}%;"
+                aria-valuenow="${count}"
+                aria-valuemin="0"
+                aria-valuemax="${maxReviews}">
+                 </div>
+               </div>
+                </div>
+               `;
+        ratingBarsContainer.innerHTML += progressBar;
+    });
+</script>

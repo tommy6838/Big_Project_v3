@@ -1,0 +1,126 @@
+﻿/* 錨點選中狀態的樣式 */
+.nav-link.active {
+    background-color: whitesmoke; 
+    color: white; 
+}
+
+
+/*橫幅圖*/
+#firstImg {
+    width: 100%;
+    height: 65vh;
+    object-fit: cover; /* 確保圖片適應容器比例 */
+}
+
+
+/*錨點導覽*/
+#navbar-example2 a {
+    font-weight: bold;
+    color: lightslategrey;
+}
+
+    #navbar-example2 a:hover {
+        color: #FF6A28;
+    }
+
+.restaurantNav {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    height: 38px;
+}
+
+
+
+
+/*收藏*/
+.favorite {
+    cursor: pointer;
+    background-color: whitesmoke;
+    color: dimgrey;
+    border: 0.2px solid dimgrey;
+}
+
+.favorite_active {
+    color: aliceblue;
+    background-color: #D25823; /* 收藏後的顏色 */
+    border: aliceblue;
+}
+
+/* 去除按鈕點擊後的外框 */
+.favorite:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+#toggleButton {
+    color: #A12819;
+    font-weight: bolder;
+}
+
+section {
+    border: solid 1px;
+    border-color: #E0E0E0;
+    background-color: white;
+    padding-left:50px;
+}
+
+.restaurantMenu, #toggleButton{
+    color: #A12819;
+    font-weight: bolder;
+}
+/* 調整 "更多照片" 按鈕的位置和大小 */
+.more-photos-btn {
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色背景 */
+    border: none;
+    color: white;
+    padding: 10px; /* 放大按鈕 */
+    font-size: 18px; /* 放大字體大小 */
+    bottom: 0;
+    margin-right:0;
+    left: 10px; /* 移動按鈕到左側 */
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+    .more-photos-btn:hover {
+        background-color: rgba(0, 0, 0, 0.8); /* 懸停效果 */
+    }
+
+/*環境照*/
+.enlarged-image {
+    max-width: 100%; /* 確保圖片不會超過其容器的寬度 */
+    height: auto; /* 保持圖片的原始比例 */
+    width: auto; /* 確保圖片根據容器寬度自適應 */
+    cursor:pointer;
+}
+
+.modal-body img {
+    max-width: 65%;
+    max-height: 65%;
+    margin: auto;
+    background-color: white;
+}
+
+.modal-content {
+    background-color: rgba(0, 0, 0, 0.8); /* 設置背景顏色為透明黑 */
+}
+
+/*去除bootstrap按鈕點擊後的邊框*/
+.btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/*按鈕樣式*/
+.bookbtn {
+    font-weight: bold;
+    color: white;
+    background-color: #D25823;
+    outline: none;
+    border: hidden;
+}
+
+    /*按鈕觸碰*/
+    .bookbtn:hover {
+        background-color: #C53F0F
+    }

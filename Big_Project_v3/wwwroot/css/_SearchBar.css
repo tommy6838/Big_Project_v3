@@ -1,0 +1,24 @@
+﻿/* 小螢幕時，使用 search-bar 的樣式 (垂直排列) */
+@media (max-width: 768px) {
+    .search-bar {
+        display: block;
+    }
+
+        .search-bar .input-group {
+            margin-bottom: 10px;
+        }
+}
+
+/* 大於 768px 時，不覆蓋 Bootstrap 的 input-group 樣式 */
+@media (min-width: 768px) {
+    .search-bar {
+        display: inline-flex; /* 避免干擾 Bootstrap 的行內設計 */
+        gap: 1rem; /* 每個項目之間的間距 */
+        align-items: center; /* 水平置中 */
+    }
+
+        .search-bar .input-group {
+            margin-bottom: 0; /* 確保大螢幕時無垂直間距 */
+        }
+}
+

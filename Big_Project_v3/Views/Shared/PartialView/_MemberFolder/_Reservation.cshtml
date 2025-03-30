@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Big_Project_v3.ViewModels.ReservationViewModel>
+
+<div class="container mt-4">
+    <h2 class="fw-bold text-center">近期訂位</h2>
+    <div class="row">
+        @foreach (var reservation in Model)
+        {
+            <div class="col-md-12 mb-3">
+                <!-- 卡片樣式 -->
+                <div class="card shadow-sm">    
+                    <div class="card-body">
+                        <!-- 餐廳圖片及按鈕 -->
+                        <div class="row">
+                            <div class="col-md-3 d-flex flex-column align-items-center">
+                                <a asp-controller="Restaurant" asp-action="Index" asp-route-id="@reservation.RestaurantID">
+                                    <img src="@reservation.PhotoUrl" alt="餐廳圖片" class="img-fluid rounded mb-3" style="width: 200px; height: 200px;">
+                                </a>
+                                @if (reservation.ReservationStatus == "已完成" && reservation.ReviewID == 0) // 確保狀態為已完成
+                                {
+                                    <button class="fw-bold img-fluid rounded btn btn-success add-comment-btn mb-3" style="width: 200px; height: 40px" data-restaurant-id="@reservation.RestaurantID">新增評論</button>
+                                }
+                            </div>
+                            <div class="col-md-9 d-flex flex-column justify-content-center align-items-md-start align-items-center text-center text-md-start">
+                                <!-- 訂位資訊 -->
+                                <a asp-controller="Restaurant" asp-action="Index" asp-route-id="@reservation.RestaurantID" class="text-decoration-none">
+                                    <h4 class="fw-bolder card-title text-black-50">@reservation.Name</h4>
+                                </a>
+
+                                @if (reservation.ReservationStatus == "已確認")
+                                {
+                                    <h5 class="text-primary fw-bold">✔ @reservation.ReservationStatus 訂位</h5>
+                                }
+                                else if (reservation.ReservationStatus == "已完成")
+                                {
+                                    <h5 class="text-success fw-bold">🎉 @reservation.ReservationStatus 訂位</h5>
+                                }
+                                else if (reservation.ReservationStatus == "未確認")
+                                {
+                                    <h5 class="text-info fw-bold">▲ @reservation.ReservationStatus 訂位</h5>
+                                }
+                                else
+                                {
+                                    <h5 class="text-danger fw-bold">✘ @reservation.ReservationStatus 訂位</h5>
+                                }
+
+                                <p class="mb-1">
+                                    <i class="fas fa-user"></i> 成人人數：@reservation.NumAdults<br />
+                                    <i class="fas fa-child"></i> 兒童人數：@reservation.NumChildren<br />
+                                    <i class="bi bi-calendar-event"></i> 日期：@reservation.ReservationDate.ToString("yyyy/MM/dd")<br />
+                                    <i class="bi bi-clock"></i> 時間：@reservation.ReservationTime.ToString(@"hh\:mm")<br />
+                                    <i class="bi bi-chat-left-text-fill"></i> 備註：@reservation.SpecialRequests
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

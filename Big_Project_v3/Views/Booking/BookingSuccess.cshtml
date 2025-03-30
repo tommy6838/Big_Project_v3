@@ -1,0 +1,25 @@
+﻿@model IDictionary<string, object>
+
+
+<div class="container mt-5" style="margin-top:0px !important;">
+    <br>
+    <h1 class="text-center text-success">訂位成功！</h1>
+    <p class="text-center">以下是您的訂單資訊：</p>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4>餐廳資訊</h4>
+            <p>餐廳名稱：@Model["RestaurantName"]</p>
+            <p>日期：@Model["Date"]</p>
+            <p>時間：@Model["Time"]</p>
+            <p>大人數量：@Model["NumAdults"]</p>
+            <p>小孩數量：@Model["NumChildren"]</p>
+
+            <h4 class="mt-4">訂位人資訊</h4>
+            <p>姓名：@Model["BookerName"]</p>
+            <p>電話：@Model["BookerPhone"]</p>
+            <p>Email：@Model["BookerEmail"]</p>
+            <p>備註：@Model["SpecialRequests"]</p>
+        </div>
+    </div>
+</div>

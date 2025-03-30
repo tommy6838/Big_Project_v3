@@ -1,0 +1,357 @@
+﻿@model Big_Project_v3.ViewModels.UserViewModel
+
+@{
+    ViewData["Title"] = "會員中心";
+}
+
+<link rel="stylesheet" href="~/css/Index.css" />
+
+<div class="container">
+    <!-- Header 區塊 -->
+    <br />
+    <div class="row mt-4">
+        <div class="col-12 text-center border-bottom pb-3">
+            <h3>@Model.UserName（@Model.Name） 您好：</h3>
+            @* <p>會員起始日期：2024年11月</p> *@
+        </div>
+    </div>
+
+    <!-- 左側 Sidebar 和內容 -->
+    <div class="row mt-4">
+        <!-- Sidebar 區塊 -->
+        <div class="col-md-3">
+            <ul class="list-group">
+                <li class="fw-bold fs-5 list-group-item">
+                    <a href="#" onclick="loadPartialView('_Reservation')">訂位</a>
+                </li>
+                <li class="fw-bold fs-5 list-group-item">
+                    <a href="#" onclick="loadPartialView('_FavoriteRestaurants')">珍藏餐廳</a>
+                </li>
+                <li class="fw-bold fs-5 list-group-item">
+                    <a href="#" onclick="loadPartialView('_Comment')">評論</a>
+                </li>
+                <li class="fw-bold fs-5 list-group-item">
+                    <a href="/User/EditProfile">帳戶詳細資料</a>
+                </li>
+            </ul>
+        </div>
+        <!-- Main Content 區塊 -->
+        <div class="col-md-9">
+            <div id="mainContent">
+                @if (Model.Reservations != null && Model.Reservations.Any())
+                {
+                    <!-- 如果有訂位記錄，渲染 _Reservation 部分視圖 -->
+                    @await Html.PartialAsync("PartialView/_MemberFolder/_Reservation", Model.Reservations)
+                }
+                else
+                {
+                    <!-- 如果沒有訂位記錄，顯示提示訊息 -->
+                    <h1>您目前沒有任何訂位記錄</h1>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 模態框 -->
+<div id="addCommentModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">新增評論</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="addCommentContent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 引入 Bootstrap CSS 和 JS, jQuery -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- 引入 Axios 庫 -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<!-- 主視圖的 JavaScript 區塊 -->
+<!-- 主視圖的 JavaScript 區塊 -->
+ <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 1. 創建初始化星級評分的函數
+        window.initializeStarRating = function (container) {
+            const labels = container.querySelectorAll('label');
+
+            labels.forEach((label, index) => {
+                // 滑鼠進入星星時，亮起相應的星星
+                label.addEventListener('mouseenter', function () {
+                    updateStarColors(container, index + 1); // 亮起從左到 index 的所有星星
+                });
+
+                // 滑鼠離開星星時，恢復到選擇的星星數量
+                label.addEventListener('mouseleave', function () {
+                    const checkedStar = container.querySelector('input[type="radio"]:checked');
+                    if (checkedStar) {
+                        updateStarColors(container, parseInt(checkedStar.value)); // 恢復到選擇的評分
+                    } else {
+                        updateStarColors(container, 0); // 沒有選擇的評分，全部暗色
+                    }
+                });
+
+                // 點擊星星時，將該星星及之前的星星亮起，並設置評分值
+                label.addEventListener('click', function () {
+                    // 更新所有星星的顏色
+                    labels.forEach((l, i) => {
+                        l.querySelector('svg').style.fill = (i < index + 1) ? '#fabb05' : '#80868b';
+                    });
+
+                    // 更新對應的 input radio 值以反映當前選擇
+                    const input = container.querySelector(`#star-${index + 1}`);
+                    if (input) {
+                        input.checked = true;
+                    }
+                });
+            });
+
+            // 用於更新星星顏色的輔助函數
+            function updateStarColors(container, highlightedStars) {
+                const labels = container.querySelectorAll('label');
+                labels.forEach((label, index) => {
+                    if (index < highlightedStars) {
+                        label.querySelector('svg').style.fill = '#fabb05'; // 亮起顏色
+                    } else {
+                        label.querySelector('svg').style.fill = '#80868b'; // 暗色
+                    }
+                });
+            }
+        }
+
+        // 2. 加載局部視圖的函數
+        window.loadPartialView = function (viewName) {
+            fetch(`/Member/LoadPartialView?partialViewName=${viewName}`)
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(err => { throw new Error(err); });
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    document.getElementById('mainContent').innerHTML = html;
+
+                    // 初始化新載入內容中的星級評分
+                    const starRatingContainers = document.querySelectorAll('#mainContent .star-rating');
+                    starRatingContainers.forEach(container => {
+                        initializeStarRating(container);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading partial view:', error);
+                });
+        };
+
+
+        // 3. 定義收藏相關功能
+        window.removeFavorite = function (RestaurantID) {
+            if (RestaurantID === 0) {
+                console.error('無效的餐廳 ID，無法取消珍藏。');
+                return;
+            }
+
+            axios.post('/Member/RemoveFavorite', { RestaurantId: RestaurantID })
+                .then(response => {
+                    const data = response.data;
+                    if (data.success) {
+                        loadPartialView('_FavoriteRestaurants');
+                    } else {
+                        console.error('取消珍藏失敗:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error.response || error.message);
+                });
+        };
+
+        // 4. 打開新增評論的 Modal
+        window.openAddCommentModal = function (RestaurantID) {
+            if (RestaurantID === 0) {
+                console.error('無效的餐廳 ID，無法新增評論。');
+                return;
+            }
+
+            $.ajax({
+                url: '/Member/AddComment',
+                type: 'GET',
+                data: { restaurantId: RestaurantID },
+                success: function (response) {
+                    $('#addCommentContent').html(response);
+                    $('#addCommentModal').modal('show');
+
+                    // 初始化星級評分
+                    const starRatingContainer = document.querySelector('#addCommentModal .star-rating');
+                    if (starRatingContainer) {
+                        initializeStarRating(starRatingContainer);
+                    }
+                },
+                error: function (xhr) {
+                    console.error('發生錯誤:', xhr.responseText);
+                    alert('無法載入評論表單，請稍後再試。');
+                }
+            });
+        };
+
+        // 5. 打開編輯評論的 Modal
+        window.openEditCommentModal = function (ReviewID) {
+            if (ReviewID === 0) {
+                console.error('無效的評論 ID，無法修改評論。');
+                return;
+            }
+
+            $.ajax({
+                url: '/Member/EditComment',
+                type: 'GET',
+                data: { reviewId: ReviewID },
+                success: function (response) {
+                    $('#addCommentContent').html(response);
+                    $('#addCommentModal').modal('show');
+
+                    // 初始化星級評分
+                    const starRatingContainer = document.querySelector('#addCommentModal .star-rating');
+                    if (starRatingContainer) {
+                        initializeStarRating(starRatingContainer);
+                    }
+                },
+                error: function (xhr) {
+                    console.error('發生錯誤:', xhr.responseText);
+                    alert('無法載入評論表單，請稍後再試。');
+                }
+            });
+        };
+
+        // 6. 提交評論 (添加或編輯)
+        window.submitComment = function () {
+            const form = document.getElementById('addCommentForm');
+            const selectedRating = form.querySelector('input[name="Rating"]:checked');
+            if (!selectedRating) {
+                alert('請選擇一個評分。');
+                return;
+            }
+
+            const reviewIdInput = form.querySelector('input[name="ReviewID"]');
+            const isEdit = reviewIdInput !== null && reviewIdInput.value !== "";
+
+            const formData = {
+                Rating: parseFloat(selectedRating.value),
+                ReviewText: form.querySelector('textarea[name="ReviewText"]').value,
+                RestaurantID: parseInt(form.querySelector('input[name="RestaurantID"]').value, 10)
+            };
+
+            if (isEdit) {
+                formData.ReviewID = parseInt(reviewIdInput.value, 10);
+            }
+
+            if (formData.Rating < 1.0 || formData.Rating > 5.0) {
+                alert('評分必須介於 1 到 5 之間。');
+                return;
+            }
+
+            const url = isEdit ? '/Member/EditComment' : '/Member/SubmitComment';
+
+            axios.post(url, formData)
+                .then(response => {
+                    const data = response.data;
+                    if (data.success) {
+                        $('#addCommentModal').modal('hide');
+                        // loadPartialView('_Comment'); // 重新加載評論部分視圖
+                        alert(data.message); // 顯示成功訊息
+                        location.reload('_Comment'); // 重新載入頁面
+                    } else {
+                        alert(data.message); // 顯示失敗訊息
+                        location.reload('_Comment'); // 重新載入頁面
+                    }
+                })
+                .catch(error => {
+                    console.error('Error submitting comment:', error);
+                    alert('評論提交失敗，請稍後再試。');
+                });
+        };
+
+        // 示例的 initializeStarRating 函數
+        function initializeStarRating(container) {
+            // 此函數根據需要進行初始化，可能不需要任何操作
+            // 目前的星星評分系統已經通過 CSS 處理懸停和選中狀態
+        }
+
+
+
+        // 7. 刪除評論的函數
+        window.deleteComment = function (ReviewID) {
+            if (!confirm('確定要刪除這條評論嗎？')) {
+                return;
+            }
+
+            $.ajax({
+                url: '/Member/DeleteComment',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(ReviewID),
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        loadPartialView('_Comment'); // 重新加載評論部分視圖
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function () {
+                    alert('評論刪除失敗，請稍後再試。');
+                }
+            });
+        };
+
+        // 8. 使用事件委託來處理按鈕的點擊事件
+        document.body.addEventListener('click', function (event) {
+            if (event.target.matches('.remove-favorite-btn')) {
+                const restaurantId = event.target.getAttribute('data-restaurant-id');
+                if (restaurantId) {
+                    removeFavorite(parseInt(restaurantId, 10));
+                } else {
+                    console.error('無效的餐廳 ID');
+                }
+            }
+
+            if (event.target.matches('.add-comment-btn')) {
+                const restaurantId = event.target.getAttribute('data-restaurant-id');
+                if (restaurantId) {
+                    openAddCommentModal(parseInt(restaurantId, 10));
+                } else {
+                    console.error('無效的餐廳 ID');
+                }
+            }
+
+            if (event.target.matches('.edit-comment-btn')) {
+                const reviewId = event.target.getAttribute('data-review-id');
+                if (reviewId) {
+                    openEditCommentModal(parseInt(reviewId, 10));
+                } else {
+                    console.error('無效的評論 ID');
+                }
+            }
+
+            if (event.target.matches('.delete-comment-btn')) {
+                const reviewId = event.target.getAttribute('data-review-id');
+                if (reviewId) {
+                    deleteComment(parseInt(reviewId, 10));
+                } else {
+                    console.error('無效的評論 ID');
+                }
+            }
+
+            if (event.target.matches('#submitCommentBtn')) {
+                submitComment();
+            }
+        });
+    });
+ </script>
+

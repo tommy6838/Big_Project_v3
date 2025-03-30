@@ -28,27 +28,27 @@ public partial class Announcement
     /// <summary>
     /// 公告日期（前台 + 後台）。此欄位記錄公告的發布日期，用於排序和過濾。
     /// </summary>
-    public DateTime AnnouncementDate { get; set; }
+    public DateTime? AnnouncementDate { get; set; }
 
     /// <summary>
     /// 公告開始日期（前台 + 後台）。此欄位指定公告的開始日期，決定公告何時開始顯示。
     /// </summary>
-    public DateTime? StartDate { get; set; }
+    public DateOnly? StartDate { get; set; }
 
     /// <summary>
     /// 公告結束日期（前台 + 後台）。此欄位指定公告的結束日期，決定公告何時停止顯示。
     /// </summary>
-    public DateTime? EndDate { get; set; }
+    public DateOnly? EndDate { get; set; }
 
     /// <summary>
     /// 公告建立時間（前台 + 後台）。此欄位記錄公告紀錄的建立時間，用於審計和管理。
     /// </summary>
-    public DateTime CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     /// <summary>
     /// 公告更新時間（前台 + 後台）。此欄位記錄公告紀錄的最後更新時間，用於追蹤資料變更歷史。
     /// </summary>
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     public virtual Restaurant? Restaurant { get; set; }
 }

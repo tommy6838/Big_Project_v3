@@ -1,0 +1,51 @@
+﻿@model Big_Project_v3.Models.RestaurantUser
+
+@{
+    ViewData["Title"] = "EditUM";
+}
+
+<h1>用戶管理</h1>
+<hr />
+
+<div class="d-flex align-items-center">
+    <h4 class="mb-0 me-2">編輯管理人員</h4>
+    <a asp-action="UserManagement" class="btn btn-primary">返回</a>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditUM">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RestaurantUserId" value="@Model.RestaurantUserId" />
+
+            <div class="form-group mt-3 mb-3">
+                <label asp-for="ManagerId" class="control-label">帳號名稱:</label>
+                <input asp-for="ManagerId" class="form-control" style="background-color: rgb(65, 68, 73, 0.40);cursor: not-allowed;" disabled />
+                <span asp-validation-for="ManagerId" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="ManagerPosition" class="control-label">職位:</label>
+                <select asp-for="ManagerPosition" value="@Model.ManagerPosition" class="form-select">
+                    <option>經理</option>
+                    <option>財務</option>
+                </select>
+                <span asp-validation-for="ManagerPosition" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Email" class="control-label">電子郵件:</label>
+                <input asp-for="Email" class="form-control" style="background-color: rgb(65, 68, 73, 0.40);cursor: not-allowed;" disabled />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="MobileNumber" class="control-label">手機號碼:</label>
+                <input asp-for="MobileNumber" class="form-control" style="background-color: rgb(65, 68, 73, 0.40);cursor: not-allowed;" disabled />
+                <span asp-validation-for="MobileNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="儲存" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+

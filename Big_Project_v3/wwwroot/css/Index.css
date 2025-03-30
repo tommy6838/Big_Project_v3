@@ -1,0 +1,25 @@
+﻿body {
+}
+/* 調整 list-group-item 間距 */
+.list-group-item {
+    padding: 10px 15px; /* 可根據需要調整 */
+    border: none; /* 移除邊框 */
+}
+
+/* 移除超連結的藍色字體與底線 */
+.list-group-item a {
+    color: black; /* 將字體顏色設定為黑色 */
+    text-decoration: none; /* 移除底線 */
+}
+
+/* 增強懸停效果 */
+.list-group-item a:hover {
+    font-weight: bold; /* 滑鼠懸停時文字加粗 */
+    color: #000; /* 確保懸停時字體顏色仍為黑色 */
+}
+
+/* 加強整體一致性 */
+.list-group {
+    border: 1px solid #e0e0e0; /* 可選擇是否添加 */
+    border-radius: 5px; /* 加點圓角效果 */
+}

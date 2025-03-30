@@ -1,0 +1,60 @@
+﻿@model Restaurant
+
+<div>
+
+    <!-- 餐廳名稱 -->
+    <div class="form-group">
+        <label asp-for="Name" class="control-label">餐廳名稱</label>
+        <input asp-for="Name" class="form-control" readonly />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <!-- 地址 -->
+    <div class="form-group">
+        <label asp-for="Address" class="control-label">地址</label>
+        <input asp-for="Address" class="form-control" readonly />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <!-- 聯絡電話 -->
+    <div class="form-group">
+        <label asp-for="ContactPhone" class="control-label">聯絡電話</label>
+        <input asp-for="ContactPhone" class="form-control" readonly />
+        <span asp-validation-for="ContactPhone" class="text-danger"></span>
+    </div>
+
+    <!-- 餐廳簡介 -->
+    <div class="form-group">
+        <label asp-for="Description" class="control-label">餐廳簡介</label>
+        <textarea asp-for="Description" class="form-control" readonly></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <!-- 消費金額 -->
+    <div class="form-group">
+        <label asp-for="PriceRange" class="control-label">消費金額</label>
+        <input asp-for="PriceRange" class="form-control" readonly />
+        <span asp-validation-for="PriceRange" class="text-danger"></span>
+    </div>
+
+    <!-- 是否有停車場 -->
+    <div class="form-group">
+        <label asp-for="HasParking" class="control-label">是否有停車場</label>
+        <select asp-for="HasParking" class="form-control" disabled>
+            <option value="true">有</option>
+            <option value="false">無</option>
+        </select>
+        <span asp-validation-for="HasParking" class="text-danger"></span>
+    </div>
+</div>
+
+<!-- 隱藏的欄位，不讓用戶修改 -->
+<input type="hidden" asp-for="IsReservationOpen" />
+<input type="hidden" asp-for="AverageRating" />
+<input type="hidden" asp-for="CreatedAt" />
+<input type="hidden" asp-for="UpdatedAt" />
+<input type="hidden" asp-for="BusinessHoursStart" />
+<input type="hidden" asp-for="BusinessHoursEnd" />
+<input type="hidden" asp-for="LastCheckInTime" />
+<input type="hidden" asp-for="GoogleMapAddress" />
+<input type="hidden" asp-for="RestaurantId" />
